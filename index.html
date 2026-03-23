@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>flow.phangan</title>
+<meta name="theme-color" content="#1a1c2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="flow.phangan">
+<meta name="description" content="Live events, venues & vibes on Koh Phangan island">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ── THEME VARIABLES ── */
+:root{
+  --bg:#1a1c2e;--bg2:#222438;--bg3:#2a2d45;--card:#252740;--card2:#2e3150;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.12);
+  --gold:#e8c97a;--gold2:#f0d88a;--gold-dim:rgba(232,201,122,.14);
+  --text:#f0eefc;--text2:#a8a8c8;--text3:#6a6a8a;
+  --music:#ff5fa0;--party:#c45aff;--practices:#5ab4ff;--movement:#f9a825;--sport:#ff4444;--workshop:#26c6da;--festival:#a259ff;--restaurant:#ffb84d;
+  --r:16px;--rs:10px;--sh:0 4px 24px rgba(0,0,0,.35);
+  color-scheme:dark;
+}
+[data-theme="light"]{
+  --bg:#f0ede4;--bg2:#e8e4db;--bg3:#dedad0;--card:#faf8f2;--card2:#f2efe8;
+  --border:rgba(26,28,46,.08);--border2:rgba(26,28,46,.14);
+  --gold:#9a7820;--gold2:#b08a28;--gold-dim:rgba(154,120,32,.1);
+  --text:#1a1c2e;--text2:#4a4a6a;--text3:#8a8a9a;
+  --sh:0 4px 24px rgba(26,28,46,.1);
+  color-scheme:light;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .25s,color .25s}
+
+/* ── HEADER ── */
+header{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(16px);height:56px;display:flex;align-items:center;padding:0 14px;gap:8px}
+.logo{display:flex;align-items:center;gap:8px;flex:1;text-decoration:none}
+.logo-img{width:30px;height:30px;object-fit:contain;flex-shrink:0}
+.logo-name{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--gold);letter-spacing:-.01em}
+.hdr-wx{display:flex;align-items:center;gap:6px;cursor:pointer;padding:4px 8px;border-radius:8px;background:var(--bg3);border:1px solid var(--border)}
+.hdr-temp{font-size:.75rem;font-weight:600;color:var(--text2)}
+.hdr-moon{font-size:.68rem;color:var(--text3)}
+.theme-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}.theme-btn svg{width:16px;height:16px;stroke:var(--text2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:stroke .25s}.theme-btn.light-mode svg{stroke:#f59e0b}
+.lbtn{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-size:.66rem;font-weight:700;font-family:'Inter',sans-serif;padding:5px 7px;cursor:pointer}
+.auth-row{display:flex;gap:5px}
+.btn-login{background:none;border:1px solid var(--border2);border-radius:8px;color:var(--text3);font-size:.67rem;font-family:'Inter',sans-serif;padding:5px 9px;cursor:pointer}
+.btn-signup{background:var(--gold);border:none;border-radius:8px;color:var(--bg);font-size:.67rem;font-weight:700;font-family:'Inter',sans-serif;padding:5px 9px;cursor:pointer}
+
+/* ── DATE/FILTER BAR ── */
+.top-bar{background:var(--bg);border-bottom:1px solid var(--border);position:sticky;top:56px;z-index:99;padding:10px 14px 8px}
+.date-row{display:flex;gap:7px;margin-bottom:8px;overflow-x:auto;scrollbar-width:none}
+.date-row::-webkit-scrollbar{display:none}
+.dchip{flex-shrink:0;padding:5px 14px;border-radius:20px;font-size:.77rem;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--text2);transition:all .15s;font-family:'Inter',sans-serif}
+.dchip.active{background:var(--gold);border-color:var(--gold);color:var(--bg)}
+.filter-row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.filter-row::-webkit-scrollbar{display:none}
+.fchip{flex-shrink:0;height:28px;padding:0 11px;border-radius:14px;font-size:.71rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text3);transition:all .15s;display:flex;align-items:center;gap:4px;font-family:'Inter',sans-serif}
+.fchip.active{border-color:transparent;color:var(--bg)}
+.fchip-all.active{background:var(--text)}
+.fchip-music.active{background:var(--music)}
+.fchip-party.active{background:var(--party)}
+.fchip-practices.active{background:var(--practices)}
+.fchip-movement.active{background:var(--movement)}
+.fchip-sport.active{background:var(--sport)}
+.fchip-workshop.active{background:var(--workshop)}
+.fchip-festival.active{background:var(--festival)}
+.fdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.fdot-music{background:var(--music)}.fdot-party{background:var(--party)}
+.fdot-practices{background:var(--practices)}.fdot-movement{background:var(--movement)}
+.fdot-sport{background:var(--sport)}.fdot-workshop{background:var(--workshop)}.fdot-festival{background:var(--festival)}
+
+/* ── LIVE BANNER ── */
+.live-banner{margin:10px 14px 0;background:linear-gradient(135deg,rgba(196,90,255,.08),rgba(90,180,255,.05));border:1px solid rgba(196,90,255,.15);border-radius:var(--r);padding:9px 12px;display:flex;align-items:center;gap:9px;cursor:pointer}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#ff4d6d;box-shadow:0 0 0 3px rgba(255,77,109,.2);animation:pulse 1.5s infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 3px rgba(255,77,109,.18)}50%{box-shadow:0 0 0 6px rgba(255,77,109,.06)}}
+.live-txt{flex:1}.live-t{font-size:.79rem;font-weight:600;color:var(--text)}
+.live-s{font-size:.69rem;color:var(--text3);margin-top:1px}
+
+/* ── AI BAR ── */
+.ai-bar{margin:8px 14px 0;display:flex;align-items:center;gap:8px;padding:7px 11px;background:var(--card);border-radius:var(--rs);border:1px solid var(--border);font-size:.7rem;color:var(--text3)}
+.ai-bar.ok{border-color:rgba(79,201,138,.15)}
+.ai-bar.err{border-color:rgba(255,100,100,.15)}
+.spinner{width:13px;height:13px;border:2px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ai-msg{flex:1}
+.ai-btn{font-size:.67rem;font-weight:600;color:var(--gold);background:var(--gold-dim);border:none;border-radius:6px;padding:3px 8px;cursor:pointer;font-family:'Inter',sans-serif}
+
+/* ── SECTION LABEL ── */
+.slbl{padding:13px 14px 7px;font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;justify-content:space-between}
+.scount{font-size:.63rem;color:var(--text3);font-weight:400;letter-spacing:0;text-transform:none}
+
+/* ── EVENT CARDS ── */
+.elist{padding:0 14px 90px;display:flex;flex-direction:column;gap:10px}
+.ecard{background:var(--card);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);cursor:pointer;transition:transform .13s,box-shadow .13s;border:1px solid var(--border)}
+.ecard:active{transform:scale(.985)}
+.ecard:hover{border-color:var(--border2);box-shadow:0 6px 32px rgba(0,0,0,.4)}
+.ecard-inner{display:flex}
+.ecard-stripe{width:3px;flex-shrink:0;align-self:stretch}
+.ecard-body{flex:1;padding:13px 14px;min-width:0}
+.ecard-row1{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:4px}
+.ecard-title{font-size:.9rem;font-weight:600;color:var(--text);line-height:1.3;flex:1}
+.estat{padding:2px 8px;border-radius:10px;font-size:.59rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;flex-shrink:0;white-space:nowrap}
+.s-now{background:rgba(255,77,109,.15);color:#ff4d6d;border:1px solid rgba(255,77,109,.25)}
+.s-soon{background:rgba(255,210,50,.1);color:#ffd044;border:1px solid rgba(255,210,50,.2)}
+.s-later{background:var(--bg3);color:var(--text3);border:1px solid var(--border)}
+.s-tmrw{background:rgba(90,180,255,.08);color:#5ab4ff;border:1px solid rgba(90,180,255,.14)}
+.emeta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.emi{font-size:.71rem;color:var(--text3);display:flex;align-items:center;gap:3px}
+.eprice{font-size:.71rem;font-weight:700;color:var(--gold)}
+.ecard-desc{font-size:.72rem;color:var(--text3);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:9px}
+.ecard-acts{display:flex;gap:6px}
+.abtn{flex:1;height:29px;border-radius:8px;border:1px solid var(--border2);background:transparent;cursor:pointer;font-size:.67rem;font-weight:600;font-family:'Inter',sans-serif;color:var(--text2);display:flex;align-items:center;justify-content:center;gap:4px;transition:all .13s}
+.abtn:hover{border-color:var(--gold);color:var(--gold)}
+.abtn-ticket{background:var(--gold-dim);border-color:rgba(232,201,122,.25);color:var(--gold);font-weight:700}
+.abtn-ticket:hover{background:rgba(232,201,122,.2)}
+
+/* ── VENUES ── */
+main{max-width:680px;margin:0 auto}
+.tab-page{display:none}.tab-page.active{display:block}
+.vsec-hdr{padding:14px 14px 7px;display:flex;align-items:center;justify-content:space-between}
+.vsec-t{font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)}
+.vsec-c{font-size:.63rem;color:var(--text3)}
+.vlist{padding:0 14px 6px;display:flex;flex-direction:column;gap:6px}
+.vcard{background:var(--card);border-radius:var(--rs);overflow:hidden;cursor:pointer;transition:all .13s;border:1px solid var(--border);display:flex;align-items:center;padding:11px 14px;gap:12px}
+.vcard:active{transform:scale(.99)}.vcard:hover{border-color:var(--border2);background:var(--card2)}
+.vcat-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.vcard-info{flex:1;min-width:0}
+.vname{font-size:.85rem;font-weight:600;color:var(--text);line-height:1.3}
+.varea{font-size:.68rem;color:var(--text3);margin-top:2px}
+.vfacs{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.vfac{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:2px 7px;font-size:.6rem;color:var(--text3)}
+.vcard-arr{color:var(--text3);opacity:.4;flex-shrink:0}
+.vsec-hdr{padding:14px 14px 10px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.vsec-hdr:hover .vsec-t{color:var(--text2)}
+.vsec-t{font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;gap:6px}
+.vsec-c{font-size:.63rem;color:var(--text3);display:flex;align-items:center;gap:6px}
+.vsec-arr{transition:transform .25s;opacity:.4}
+.vsec-body{overflow:hidden;transition:max-height .3s ease}
+.vsec-body.collapsed{max-height:0!important}
+
+/* ── SEARCH ── */
+.sbar{margin:12px 14px 0;display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:9px 13px}
+.sbar input{flex:1;border:none;background:none;font-family:'Inter',sans-serif;font-size:.82rem;color:var(--text);outline:none}
+.sbar input::placeholder{color:var(--text3)}
+
+/* ── BOTTOM NAV ── */
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:99;background:var(--bg);border-top:1px solid var(--border);display:flex;padding-bottom:env(safe-area-inset-bottom,0)}
+.bnt{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;height:54px;gap:3px;cursor:pointer;border:none;background:none;transition:all .14s}
+.bnt svg{opacity:.3;transition:opacity .14s;color:var(--text)}
+.bnt span{font-size:.58rem;font-weight:600;color:var(--text3);transition:color .14s}
+.bnt.active svg{opacity:1;color:var(--gold)}
+.bnt.active span{color:var(--gold)}
+
+/* ── MODALS ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:flex-end;backdrop-filter:blur(8px)}
+.overlay.open{display:flex}
+.modal{background:var(--bg2);border-radius:22px 22px 0 0;width:100%;max-height:92vh;overflow-y:auto;padding-bottom:env(safe-area-inset-bottom,16px);animation:su .27s cubic-bezier(.22,1,.36,1);border-top:1px solid var(--border2)}
+@keyframes su{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
+.mhandle{width:38px;height:4px;background:var(--border2);border-radius:2px;margin:12px auto}
+
+/* Event modal */
+.emodal-hero{padding:0 18px 16px;border-bottom:1px solid var(--border)}
+.emodal-cat{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.emodal-title{font-family:'Syne',sans-serif;font-size:1.3rem;color:var(--text);line-height:1.25;margin-bottom:8px}
+.emodal-venue{font-size:.78rem;color:var(--text3);display:flex;align-items:center;gap:5px;margin-bottom:4px}
+.emodal-time{font-size:.78rem;color:var(--text2);display:flex;align-items:center;gap:5px}
+
+.emodal-body{padding:16px 18px}
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+.info-cell{background:var(--bg3);border-radius:var(--rs);padding:10px 12px;border:1px solid var(--border)}
+.info-lbl{font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:3px}
+.info-val{font-size:.84rem;font-weight:700;color:var(--text)}
+
+.emodal-desc{font-size:.84rem;color:var(--text2);line-height:1.7;margin-bottom:18px}
+
+.lineup-section{margin-bottom:18px}
+.sec-title{font-size:.63rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.lineup-tags{display:flex;flex-wrap:wrap;gap:6px}
+.ltag{background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:4px 12px;font-size:.74rem;color:var(--text2)}
+
+.modal-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.mact{height:44px;border-radius:var(--rs);border:1px solid var(--border2);cursor:pointer;font-size:.8rem;font-weight:600;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .14s;background:var(--bg3);color:var(--text2)}
+.mact:hover{border-color:var(--gold);color:var(--gold)}
+.mact-primary{background:var(--card2);border-color:var(--border2);color:var(--text)}
+.mact-ticket{background:var(--gold);color:var(--bg);border-color:var(--gold);grid-column:1/-1;font-weight:700;font-size:.85rem}
+.mact-ticket:hover{background:var(--gold2)}
+.sub-acts{display:none;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.sub-acts.open{display:flex}
+.sact{flex:1;min-width:calc(33% - 7px);height:34px;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);font-size:.69rem;font-weight:600;color:var(--text2);font-family:'Inter',sans-serif;cursor:pointer;transition:all .14s}
+.sact:hover{border-color:var(--gold);color:var(--gold)}
+.share-acts{display:none;gap:7px;margin-bottom:10px}
+.share-acts.open{display:flex}
+.shbtn{flex:1;height:38px;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);font-size:.69rem;font-weight:600;color:var(--text2);font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .14s}
+.shbtn:hover{border-color:var(--gold);color:var(--gold)}
+
+/* Venue modal */
+.vmodal-photo{height:200px;position:relative;overflow:hidden}
+.vmodal-photo svg{width:100%;height:100%}
+.vmodal-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(15,16,30,.9) 0%,rgba(15,16,30,.2) 60%,transparent 100%)}
+.vmodal-title{position:absolute;bottom:14px;left:18px;right:18px}
+.vmodal-badge{font-size:.64rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:5px}
+.vmodal-name{font-family:'Syne',sans-serif;font-size:1.3rem;color:#fff;line-height:1.2}
+.vmodal-body{padding:14px 18px}
+.vmodal-area{font-size:.78rem;color:var(--text3);display:flex;align-items:center;gap:5px;margin-bottom:11px}
+.vmodal-desc{font-size:.83rem;color:var(--text2);line-height:1.65;margin-bottom:13px}
+.vmodal-facs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:15px}
+.vfac2{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:4px 11px;font-size:.71rem;color:var(--text2)}
+.vmodal-links{display:flex;gap:7px;flex-wrap:wrap}
+.vlink{display:flex;align-items:center;gap:5px;padding:7px 13px;border-radius:8px;font-size:.72rem;font-weight:600;text-decoration:none;border:1px solid var(--border2);color:var(--text2);background:var(--bg3);transition:all .14s;cursor:pointer;font-family:'Inter',sans-serif}
+.vlink:hover{border-color:var(--gold);color:var(--gold)}
+
+/* Weather modal */
+.wx-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.wx-card{background:var(--bg3);border-radius:var(--rs);padding:14px 16px;border:1px solid var(--border)}
+.wx-ico{font-size:1.6rem;margin-bottom:4px}
+.wx-lbl{font-size:.61rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);margin-bottom:2px}
+.wx-val{font-size:1.1rem;font-weight:700;color:var(--text)}
+.wx-sub{font-size:.7rem;color:var(--text3);margin-top:1px}
+
+/* Lang dropdown */
+.ldd{position:fixed;top:60px;right:14px;background:var(--card2);border-radius:var(--r);box-shadow:0 8px 32px rgba(0,0,0,.45);overflow:hidden;z-index:150;display:none;border:1px solid var(--border2);min-width:144px}
+.ldd.open{display:block}
+.lopt{display:flex;align-items:center;gap:9px;padding:10px 14px;font-size:.8rem;cursor:pointer;color:var(--text2);transition:background .14s}
+.lopt:hover{background:var(--bg3)}.lopt.sel{color:var(--gold);font-weight:600}
+
+/* Toast */
+.toast{position:fixed;bottom:68px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--card2);border:1px solid var(--border2);color:var(--text);padding:9px 18px;border-radius:20px;font-size:.78rem;opacity:0;transition:all .28s;z-index:300;white-space:nowrap;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Map */
+.mapp{margin:14px;background:var(--card);border-radius:var(--r);height:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;border:1px solid var(--border)}
+.mapp svg{opacity:.12}.mapp-lbl{font-size:.82rem;color:var(--text3)}
+
+.empty{text-align:center;padding:50px 20px;color:var(--text3);font-size:.84rem}
+
+/* ── SEARCH BAR (events) ── */
+.ev-search{margin:8px 14px 0;display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:8px 12px;transition:border-color .15s}
+.ev-search:focus-within{border-color:var(--gold)}
+.ev-search input{flex:1;border:none;background:none;font-family:'Inter',sans-serif;font-size:.8rem;color:var(--text);outline:none}
+.ev-search input::placeholder{color:var(--text3)}
+
+/* ── SKELETON CARDS ── */
+.skel{background:var(--card);border-radius:var(--r);overflow:hidden;border:1px solid var(--border);padding:14px;margin-bottom:10px}
+.skel-line{background:linear-gradient(90deg,var(--bg3) 25%,var(--bg2) 50%,var(--bg3) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:4px;height:14px;margin-bottom:8px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-line.w80{width:80%}.skel-line.w60{width:60%}.skel-line.w40{width:40%}
+
+/* ── ENRICHED EVENT CARD ── */
+.ecard-img{width:100%;height:140px;object-fit:cover;display:block;background:var(--bg3)}
+.ecard-img-wrap{position:relative;overflow:hidden;max-height:140px}
+.ecard-img-wrap .ecard-cat-badge{position:absolute;top:8px;left:8px;padding:3px 8px;border-radius:8px;font-size:.58rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;backdrop-filter:blur(8px);background:rgba(0,0,0,.45);color:#fff;border:1px solid rgba(255,255,255,.15)}
+.ecard-img-wrap .ecard-fav{position:absolute;top:7px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.15);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;font-size:.85rem}
+.ecard-fav.saved{background:rgba(232,201,122,.2);border-color:var(--gold)}
+.lineup-chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px}
+.lineup-chip{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:20px;padding:2px 8px;font-size:.6rem;color:var(--text3)}
+
+/* ── FAVORITES TAB BADGE ── */
+.fav-badge{position:absolute;top:-2px;right:-2px;background:var(--gold);color:var(--bg);border-radius:50%;width:15px;height:15px;font-size:.55rem;font-weight:700;display:flex;align-items:center;justify-content:center;display:none}
+.bnt{position:relative}
+
+/* ── PWA INSTALL PROMPT ── */
+.pwa-bar{margin:8px 14px 0;background:linear-gradient(135deg,rgba(232,201,122,.1),rgba(79,201,138,.06));border:1px solid rgba(232,201,122,.2);border-radius:var(--rs);padding:10px 12px;display:flex;align-items:center;gap:10px}
+.pwa-bar-txt{flex:1;font-size:.73rem;color:var(--text2)}
+.pwa-bar-ttl{font-weight:700;color:var(--text);font-size:.77rem;margin-bottom:1px}
+.pwa-install-btn{background:var(--gold);color:var(--bg);border:none;border-radius:7px;font-size:.68rem;font-weight:700;padding:6px 11px;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif}
+.pwa-close{background:none;border:none;color:var(--text3);cursor:pointer;font-size:1rem;padding:0 2px;line-height:1}
+
+/* ── WEATHER LIVE UPDATE ── */
+.wx-live-badge{display:inline-flex;align-items:center;gap:4px;font-size:.6rem;color:var(--practices);font-weight:600;margin-bottom:4px}
+.wx-live-dot{width:5px;height:5px;border-radius:50%;background:var(--practices);animation:pulse .5s infinite}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="#" onclick="return false">
+    <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAQABAADASIAAhEBAxEB/8QAHQABAAICAwEBAAAAAAAAAAAAAAEIBgcCBAUDCf/EAFkQAAIBAwIEAgYECwQFCAgFBQABAgMEBQYRBxIhMUFRCBMiYXGBFDJSkRUjM0JicoKSobHBQ1OiwhYkNIPRJWNzdaOys/AXGCY2N5O0w0RUZYXTJ1d0ldL/xAAaAQEAAgMBAAAAAAAAAAAAAAAAAgUBBAYD/8QALhEBAAICAQQCAwAABQUBAQAAAAECAwQRBRIhMRNBIjJRFCNhcYEVMzRCQ1KR/9oADAMBAAIRAxEAPwCvoALB5AAAAAAAAAACYAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJgAAAAIAAAAAAAAAAAAAAAAAAAAAJgAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAmAAAAAgAAAAAAAAAAAAAAACYAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAmAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACYAAAACAAAAAAAAAAAAAAAAAAAAACYAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJgAAAAIAAAAAAAAAAAAAAAAmAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAmAAAAAgAAAAAmAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAhgAmkAACQAQRAAAAAAAAAAEwAAAAEAAAAAAAAAAAAAAAAAAAAAEwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATAAAAAQAAAAATAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAQACaQAEBIAIIgAAAAAAAAACYAAAACAAAAAAAAAAAAAAAAAAAAACYAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAmAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJgAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAACYAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAmAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAmAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJgAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAACYAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAmAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIYAJpAAAkAEEQAAAAAAAAAAAAAAAAAAQwATSAABIAIIgAAAAAAAAAAAAAAAAAAAAAAAAACYAAAADEgACIAAAAAAAJgAAAAIAAAAAJgAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAACGACaQAAJABBEAAAAAAAAAAAAAAAAAAA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AAAAABMAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEwABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEwAAAAEAAAAAAAAAAAAAAAAAAAAAEwAAAAAAAQAAAAATAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATAAAAAQAAAAAAAAAAAAAAAAAAAAATAAAAAQAAAAAAABMAAAAAAAAAAAAAAAEAABMAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEwAAAAAAAAAAAAAAAAAAAAEAABMAAAAAAAAAAQAAE3//2Q==" class="logo-img" alt="flow">
+    <span class="logo-name">flow.phangan</span>
+  </a>
+  <div class="hdr-wx" onclick="openWx()">
+    <span class="hdr-temp" id="htemp"><span style="color:#f59e0b">☀</span> 29°C</span>
+    <span class="hdr-moon" id="hmoon">🌔 —</span>
+  </div>
+  <button class="theme-btn" onclick="toggleTheme()" id="theme-btn"><svg id="theme-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></button>
+  <button class="lbtn" onclick="toggleLang(event)" id="lbtnEl">EN</button>
+  <div class="ldd" id="ldd">
+    <div class="lopt sel" onclick="setLang('en')">🇬🇧 English</div>
+    <div class="lopt" onclick="setLang('tr')">🇹🇷 Türkçe</div>
+    <div class="lopt" onclick="setLang('fr')">🇫🇷 Français</div>
+    <div class="lopt" onclick="setLang('es')">🇪🇸 Español</div>
+    <div class="lopt" onclick="setLang('ru')">🇷🇺 Русский</div>
+    <div class="lopt" onclick="setLang('th')">🇹🇭 ภาษาไทย</div>
+  </div>
+  <div class="auth-row">
+    <button class="btn-login" data-i18n="login">Login</button>
+    <button class="btn-signup" data-i18n="signup">Sign up</button>
+  </div>
+</header>
+
+<main>
+
+<!-- EVENTS TAB -->
+<div class="tab-page active" id="tab-events">
+  <div class="top-bar">
+    <div class="date-row">
+      <button class="dchip active" onclick="setDay('today',this)" data-i18n="today">Today</button>
+      <button class="dchip" onclick="setDay('tomorrow',this)" data-i18n="tomorrow">Tomorrow</button>
+    </div>
+    <div class="filter-row">
+      <button class="fchip fchip-all active" onclick="setCat('all',this)">All</button>
+      <button class="fchip fchip-music" onclick="setCat('music',this)"><span class="fdot fdot-music"></span>Music</button>
+      <button class="fchip fchip-party" onclick="setCat('party',this)"><span class="fdot fdot-party"></span>Party</button>
+      <button class="fchip fchip-practices" onclick="setCat('practices',this)"><span class="fdot fdot-practices"></span>Practices</button>
+      <button class="fchip fchip-movement" onclick="setCat('movement',this)"><span class="fdot fdot-movement"></span>Movement</button>
+      <button class="fchip fchip-sport" onclick="setCat('sport',this)"><span class="fdot fdot-sport"></span>Sport</button>
+      <button class="fchip fchip-workshop" onclick="setCat('workshop',this)"><span class="fdot fdot-workshop"></span>Workshop</button>
+      <button class="fchip fchip-festival" onclick="setCat('festival',this)"><span class="fdot fdot-festival"></span>Festival</button>
+    </div>
+  </div>
+  <div class="live-banner" onclick="showLive()">
+    <div class="live-dot" id="live-dot"></div>
+    <div class="live-txt"><div class="live-t" id="live-title">Happening right now</div><div class="live-s" id="live-sub">checking…</div></div>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+  </div>
+  <!-- PWA Install Bar -->
+  <div class="pwa-bar" id="pwa-bar" style="display:none">
+    <div style="font-size:1.2rem">📲</div>
+    <div class="pwa-bar-txt"><div class="pwa-bar-ttl">Add to Home Screen</div>One tap away from the island vibes</div>
+    <button class="pwa-install-btn" onclick="installPWA()">Install</button>
+    <button class="pwa-close" onclick="document.getElementById('pwa-bar').style.display='none'">×</button>
+  </div>
+  <!-- Event Search -->
+  <div class="ev-search">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity=".35"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" placeholder="Search events, venues, artists…" id="ev-search-input" oninput="searchEvents(this.value)">
+  </div>
+  <div class="ai-bar" id="ai-bar">
+    <div class="spinner" id="ai-spin"></div>
+    <span class="ai-msg" id="ai-msg">Loading live events…</span>
+  </div>
+  <div class="slbl"><span id="ev-lbl">Today's Events</span><span class="scount" id="ev-cnt"></span></div>
+  <div class="elist" id="ev-list">
+    <div style="text-align:center;padding:50px 20px;color:var(--text3);font-size:.82rem">
+      <div class="spinner" style="margin:0 auto 14px;width:22px;height:22px"></div>
+      Loading events from phangan.events…
+    </div>
+  </div>
+</div>
+
+<!-- VENUES TAB -->
+<div class="tab-page" id="tab-venues">
+  <div class="sbar">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".3"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" placeholder="Search venues…" oninput="searchV(this.value)">
+  </div>
+  <div id="vc"></div>
+</div>
+
+<!-- MAP TAB -->
+<div class="tab-page" id="tab-map">
+  <div class="mapp">
+    <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+    <span class="mapp-lbl" data-i18n="map-coming">Interactive map coming soon</span>
+  </div>
+  <div class="vsec-hdr"><span class="vsec-t" data-i18n="nearby">Nearby Venues</span></div>
+  <div class="vgrid" id="map-v" style="padding-bottom:80px"></div>
+</div>
+
+</main>
+
+<nav class="bnav">
+  <button class="bnt active" onclick="showTab('events')" data-tab="events">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    <span data-i18n="events">Events</span>
+  </button>
+  <button class="bnt" onclick="showTab('venues')" data-tab="venues">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span data-i18n="venues">Venues</span>
+  </button>
+  <button class="bnt" onclick="showTab('saved')" data-tab="saved" id="fav-tab-btn">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+    <span id="fav-tab-cnt" class="fav-badge">0</span>
+    <span>Saved</span>
+  </button>
+  <button class="bnt" onclick="showTab('map')" data-tab="map">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+    <span data-i18n="map">Map</span>
+  </button>
+</nav>
+
+<!-- SAVED TAB -->
+<div class="tab-page" id="tab-saved">
+  <div style="padding:14px 14px 8px;display:flex;align-items:center;justify-content:space-between">
+    <div style="font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)">❤️ Saved Events</div>
+    <button onclick="clearFavs()" style="font-size:.65rem;color:var(--text3);background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif">Clear all</button>
+  </div>
+  <div class="elist" id="fav-list"></div>
+</div>
+
+<!-- EVENT DETAIL MODAL -->
+<div class="overlay" id="ev-modal" onclick="closeOv('ev-modal',event)">
+  <div class="modal">
+    <div class="mhandle"></div>
+    <div class="emodal-hero">
+      <div class="emodal-cat" id="m-cat"></div>
+      <div class="emodal-title" id="m-title"></div>
+      <div class="emodal-venue" id="m-venue"></div>
+      <div class="emodal-time" id="m-time-row"></div>
+    </div>
+    <div class="emodal-body">
+      <div class="info-grid">
+        <div class="info-cell"><div class="info-lbl" data-i18n="date">Date</div><div class="info-val" id="m-date"></div></div>
+        <div class="info-cell"><div class="info-lbl" data-i18n="price">Price</div><div class="info-val" id="m-price"></div></div>
+        <div class="info-cell"><div class="info-lbl">Status</div><div class="info-val" id="m-status"></div></div>
+      </div>
+      <p class="emodal-desc" id="m-desc"></p>
+      <div class="lineup-section" id="m-lineup-sec">
+        <div class="sec-title" data-i18n="lineup">Line-up</div>
+        <div class="lineup-tags" id="m-lineup"></div>
+      </div>
+      <div class="modal-acts">
+        <button class="mact" onclick="toggleRemind()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span data-i18n="remind">Remind</span>
+        </button>
+        <button class="mact" onclick="toggleShare()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          <span data-i18n="share">Share</span>
+        </button>
+        <button class="mact mact-primary" onclick="doDir()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+          <span data-i18n="directions">Directions</span>
+        </button>
+      </div>
+      <div class="sub-acts" id="remind-panel">
+        <button class="sact" onclick="setR(30)">30 min</button>
+        <button class="sact" onclick="setR(60)">1 hour</button>
+        <button class="sact" onclick="setR(120)">2 hours</button>
+        <button class="sact" onclick="setR(240)">4 hours</button>
+        <button class="sact" onclick="setR(1440)">24 hours</button>
+      </div>
+      <div class="share-acts" id="share-panel">
+        <button class="shbtn" onclick="shareWA()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.127.559 4.127 1.534 5.862L0 24l6.335-1.652A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+          WhatsApp
+        </button>
+        <button class="shbtn" onclick="shareTG()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="#0088cc"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.247l-2.01 9.477c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.873.744z"/></svg>
+          Telegram
+        </button>
+        <button class="shbtn" onclick="cpLink()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+          Copy
+        </button>
+      </div>
+      <div id="m-ticket-wrap"></div>
+    </div>
+  </div>
+</div>
+
+<!-- VENUE MODAL -->
+<div class="overlay" id="venue-modal" onclick="closeOv('venue-modal',event)">
+  <div class="modal"><div class="mhandle"></div><div id="vm-content"></div></div>
+</div>
+
+<!-- WEATHER MODAL -->
+<div class="overlay" id="wx-modal" onclick="closeOv('wx-modal',event)">
+  <div class="modal">
+    <div class="mhandle"></div>
+    <div style="padding:0 18px 14px;border-bottom:1px solid var(--border)">
+      <div style="font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:5px">Koh Phangan</div>
+      <div style="font-family:Syne,sans-serif;font-size:1.3rem;color:var(--text)">Weather & Moon</div>
+    </div>
+    <div style="padding:16px 18px">
+      <div class="wx-grid">
+        <div class="wx-card"><div class="wx-live-badge"><span class="wx-live-dot"></span>LIVE</div><div class="wx-ico" id="wx-temp-ico">☀️</div><div class="wx-lbl">Temperature</div><div class="wx-val" id="wx-temp-val">—</div></div>
+        <div class="wx-card"><div class="wx-live-badge"><span class="wx-live-dot"></span>LIVE</div><div class="wx-ico">💧</div><div class="wx-lbl">Humidity</div><div class="wx-val" id="wx-hum-val">—</div></div>
+        <div class="wx-card"><div class="wx-live-badge"><span class="wx-live-dot"></span>LIVE</div><div class="wx-ico">🌅</div><div class="wx-lbl">Sunrise</div><div class="wx-val" id="wx-sunrise">—</div><div class="wx-sub" id="wx-sunrise-cd">—</div></div>
+        <div class="wx-card"><div class="wx-live-badge"><span class="wx-live-dot"></span>LIVE</div><div class="wx-ico">🌄</div><div class="wx-lbl">Sunset</div><div class="wx-val" id="wx-sunset">—</div><div class="wx-sub" id="wx-sunset-cd">—</div></div>
+        <div class="wx-card">
+          <div class="wx-ico" id="wx-moon-ico">🌔</div>
+          <div class="wx-lbl">Moon Phase</div>
+          <div class="wx-val" id="wx-moon-phase">—</div>
+          <div class="wx-sub" id="wx-moon-ill">—</div>
+        </div>
+        <div class="wx-card">
+          <div class="wx-ico">🌕</div>
+          <div class="wx-lbl">Full Moon in</div>
+          <div class="wx-val" id="wx-fullmoon-cd">—</div>
+          <div class="wx-sub" id="wx-fullmoon-date">—</div>
+        </div>
+        <div class="wx-card">
+          <div class="wx-ico">🌙</div>
+          <div class="wx-lbl">Lunar Cycle</div>
+          <div class="wx-val" id="wx-lunar-day">Day —</div>
+          <div class="wx-sub" id="wx-next-event">—</div>
+        </div>
+        <div class="wx-card"><div class="wx-ico">💨</div><div class="wx-lbl">Wind</div><div class="wx-val" id="wx-wind-val">— km/h</div><div class="wx-sub" id="wx-wind-dir">—</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// THEME
+// ══════════════════════════════════════════════════════
+let isDark = localStorage.getItem('fp-theme') !== 'light';
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  const btn=document.getElementById('theme-btn');
+  if(btn){btn.classList.toggle('light-mode',!isDark);}
+  const ic=document.getElementById('theme-icon');
+  if(ic){ic.innerHTML=isDark?'<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>':'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>';}
+}
+function toggleTheme(){
+  isDark = !isDark;
+  localStorage.setItem('fp-theme', isDark ? 'dark' : 'light');
+  applyTheme();
+}
+
+// ══════════════════════════════════════════════════════
+// MOON PHASE — full calculation
+// ══════════════════════════════════════════════════════
+function getMoon(date){
+  const ref = new Date('2000-01-06'), syn = 29.53058867;
+  const age = (((date - ref) / 86400000) % syn + syn) % syn;
+  const toFull = (14.765 - age + syn) % syn;
+  const toNew = (syn - age) % syn;
+  const ill = age < 14.765 ? (age/14.765) : ((syn - age)/14.765);
+  let phase, ico, desc;
+  if(age < 1.85){phase='New Moon';ico='🌑';desc='New cycle begins';}
+  else if(age < 7.38){phase='Waxing Crescent';ico='🌒';desc='Growing light';}
+  else if(age < 9.22){phase='First Quarter';ico='🌓';desc='Half illuminated';}
+  else if(age < 14.77){phase='Waxing Gibbous';ico='🌔';desc='Nearly full';}
+  else if(age < 16.61){phase='Full Moon';ico='🌕';desc='Fully illuminated';}
+  else if(age < 22.15){phase='Waning Gibbous';ico='🌖';desc='Fading light';}
+  else if(age < 23.99){phase='Last Quarter';ico='🌗';desc='Half fading';}
+  else{phase='Waning Crescent';ico='🌘';desc='Almost new';}
+  // Next full moon date
+  const msToFull = toFull * 86400000;
+  const fullDate = new Date(date.getTime() + msToFull);
+  return {age, phase, ico, desc, toFull, toNew, ill: Math.round(ill*100), fullDate, lunarDay: Math.ceil(age)};
+}
+
+function fmtCountdown(days){
+  const d = Math.floor(days), h = Math.floor((days - d)*24);
+  if(d === 0 && h === 0) return 'Tonight!';
+  if(d === 0) return h + 'h';
+  return h > 0 ? d + ' days ' + h + 'h' : d + ' days';
+}
+
+function updateMoon(){
+  const m = getMoon(new Date());
+  // Header — sync ile updateCD, sadece moon kısmı
+  const shortCd = m.toFull < 1 ? '🌕 Full!' : m.ico + ' ' + Math.floor(m.toFull) + 'd';
+  document.getElementById('hmoon').textContent = shortCd;
+  // Modal
+  document.getElementById('wx-moon-ico').textContent = m.ico;
+  document.getElementById('wx-moon-phase').textContent = m.phase;
+  document.getElementById('wx-moon-ill').textContent = m.desc + ' · ' + m.ill + '% lit';
+  document.getElementById('wx-fullmoon-cd').textContent = fmtCountdown(m.toFull);
+  document.getElementById('wx-fullmoon-date').textContent = m.fullDate.toLocaleDateString('en-GB',{day:'numeric',month:'long'});
+  document.getElementById('wx-lunar-day').textContent = 'Day ' + m.lunarDay + ' of 29';
+  const nextEv = m.toFull < m.toNew ? ('Full Moon in '+fmtCountdown(m.toFull)) : ('New Moon in '+fmtCountdown(m.toNew));
+  document.getElementById('wx-next-event').textContent = nextEv;
+}
+
+function updateCD(){
+  const now = new Date(), nm = now.getHours()*60+now.getMinutes();
+  const src = allEvs.today;
+  const moon = getMoon(new Date());
+  const moonShort = moon.toFull < 1 ? '🌕 Full!' : moon.ico + ' ' + Math.floor(moon.toFull) + 'd';
+  if(!src.length){document.getElementById('hmoon').textContent=moonShort;return;}
+  const next = src.slice().sort((a,b)=>a.startTime.localeCompare(b.startTime)).find(e=>{
+    const[h,m]=e.startTime.split(':').map(Number); return h*60+m > nm;
+  });
+  if(!next){document.getElementById('hmoon').textContent=moonShort;return;}
+  const[h,m]=next.startTime.split(':').map(Number);
+  const diff=(h*60+m)-nm, hh=Math.floor(diff/60), mm=diff%60;
+  const cdStr = hh>0?(mm?hh+'h '+mm+'m':hh+'h'):mm+'m';
+  document.getElementById('hmoon').textContent = moonShort + ' · ⏱ ' + cdStr;
+}
+
+// ══════════════════════════════════════════════════════
+// I18N — full multilingual with description translations
+// ══════════════════════════════════════════════════════
+const T = {
+  en:{events:"Events",venues:"Venues",map:"Map",today:"Today",tomorrow:"Tomorrow",all:"All",fparty:"Party",fwellness:"Wellness",fyoga:"Yoga",fecstatic:"Ecstatic","today-events":"Today's Events","tomorrow-events":"Tomorrow's Events",happening:"Happening now","party-venues":"Party Venues","sport-venues":"Sport & Fitness","wellness-venues":"Wellness & Healing","restaurant-venues":"Restaurants",date:"Date",price:"Price",lineup:"Line-up",remind:"Remind",share:"Share",directions:"Directions",login:"Login",signup:"Sign up","rn-title":"Happening right now",nearby:"Nearby Venues","map-coming":"Interactive map coming soon","get-ticket":"Get Tickets",donation:"Donation"},
+  tr:{events:"Etkinlikler",venues:"Mekanlar",map:"Harita",today:"Bugün",tomorrow:"Yarın",all:"Tümü",fparty:"Parti",fwellness:"Wellness",fyoga:"Yoga",fecstatic:"Ecstatic","today-events":"Bugünkü Etkinlikler","tomorrow-events":"Yarınki Etkinlikler",happening:"Şu an","party-venues":"Parti Mekanları","sport-venues":"Spor & Fitness","wellness-venues":"Sağlık & Şifa","restaurant-venues":"Restoranlar",date:"Tarih",price:"Fiyat",lineup:"Sanatçılar",remind:"Hatırlat",share:"Paylaş",directions:"Yol Tarifi",login:"Giriş",signup:"Kayıt","rn-title":"Şu an devam ediyor",nearby:"Yakın Mekanlar","map-coming":"Harita çok yakında","get-ticket":"Bilet Al",donation:"Bağış"},
+  fr:{events:"Événements",venues:"Lieux",map:"Carte",today:"Aujourd'hui",tomorrow:"Demain",all:"Tous",fparty:"Fête",fwellness:"Bien-être",fyoga:"Yoga",fecstatic:"Ecstatique","today-events":"Aujourd'hui","tomorrow-events":"Demain",happening:"En cours","party-venues":"Fêtes","sport-venues":"Sport","wellness-venues":"Bien-être","restaurant-venues":"Restaurants",date:"Date",price:"Prix",lineup:"Artistes",remind:"Rappel",share:"Partager",directions:"Itinéraire",login:"Connexion",signup:"S'inscrire","rn-title":"En ce moment",nearby:"À proximité","map-coming":"Carte bientôt","get-ticket":"Billets",donation:"Libre"},
+  es:{events:"Eventos",venues:"Lugares",map:"Mapa",today:"Hoy",tomorrow:"Mañana",all:"Todo",fparty:"Fiesta",fwellness:"Bienestar",fyoga:"Yoga",fecstatic:"Extático","today-events":"Hoy","tomorrow-events":"Mañana",happening:"Ahora","party-venues":"Fiestas","sport-venues":"Deporte","wellness-venues":"Bienestar","restaurant-venues":"Restaurantes",date:"Fecha",price:"Precio",lineup:"Artistas",remind:"Recordar",share:"Compartir",directions:"Cómo llegar",login:"Entrar",signup:"Registrarse","rn-title":"Ahora mismo",nearby:"Cerca","map-coming":"Mapa próximamente","get-ticket":"Entradas",donation:"Donación"},
+  ru:{events:"События",venues:"Площадки",map:"Карта",today:"Сегодня",tomorrow:"Завтра",all:"Все",fparty:"Вечеринка",fwellness:"Велнес",fyoga:"Йога",fecstatic:"Экстатик","today-events":"Сегодня","tomorrow-events":"Завтра",happening:"Сейчас","party-venues":"Вечеринки","sport-venues":"Спорт","wellness-venues":"Оздоровление","restaurant-venues":"Рестораны",date:"Дата",price:"Цена",lineup:"Артисты",remind:"Напомнить",share:"Поделиться",directions:"Маршрут",login:"Войти",signup:"Регистрация","rn-title":"Сейчас",nearby:"Рядом","map-coming":"Карта скоро","get-ticket":"Билеты",donation:"Донейшн"},
+  th:{events:"กิจกรรม",venues:"สถานที่",map:"แผนที่",today:"วันนี้",tomorrow:"พรุ่งนี้",all:"ทั้งหมด",fparty:"ปาร์ตี้",fwellness:"เวลเนส",fyoga:"โยคะ",fecstatic:"เอ็กซ์ตาติก","today-events":"กิจกรรมวันนี้","tomorrow-events":"พรุ่งนี้",happening:"ตอนนี้","party-venues":"ปาร์ตี้","sport-venues":"กีฬา","wellness-venues":"สุขภาพ","restaurant-venues":"ร้านอาหาร",date:"วันที่",price:"ราคา",lineup:"ศิลปิน",remind:"เตือน",share:"แชร์",directions:"เส้นทาง",login:"เข้าสู่ระบบ",signup:"สมัคร","rn-title":"กำลังเกิดขึ้น",nearby:"ใกล้เคียง","map-coming":"แผนที่เร็วๆนี้","get-ticket":"ซื้อบัตร",donation:"บริจาค"}
+};
+let lang = localStorage.getItem('fp-lang')||'en';
+function i(k){return(T[lang]||T.en)[k]||k}
+function setLang(l){
+  lang=l;localStorage.setItem('fp-lang',l);
+  document.getElementById('lbtnEl').textContent=l.toUpperCase();
+  document.getElementById('ldd').classList.remove('open');
+  document.querySelectorAll('.lopt').forEach(e=>{e.classList.remove('sel');if(e.onclick?.toString().includes("'"+l+"'"))e.classList.add('sel');});
+  document.querySelectorAll('[data-i18n]').forEach(e=>{const k=e.getAttribute('data-i18n');if(T[l]&&T[l][k])e.textContent=T[l][k];});
+  renderEvents();renderVenues();
+}
+function toggleLang(e){e.stopPropagation();document.getElementById('ldd').classList.toggle('open');}
+document.addEventListener('click',()=>document.getElementById('ldd').classList.remove('open'));
+
+// ══════════════════════════════════════════════════════
+// EVENT DATA FETCHING
+// ══════════════════════════════════════════════════════
+const TODAY_DT = new Date();
+const TMRW_DT = new Date(TODAY_DT); TMRW_DT.setDate(TMRW_DT.getDate()+1);
+const cache = {today:{data:null,ts:0},tomorrow:{data:null,ts:0}};
+const CACHE_TTL = 30*60*1000;
+let allEvs = {today:[], tomorrow:[]};
+let curDay='today', curCat='all', activeEv=null, fetching=false;
+
+function fmtDate(d){return d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}
+
+// Translate description via Claude API
+async function translateDesc(text, targetLang){
+  if(targetLang==='en'||!text) return text;
+  const langNames={tr:'Turkish',fr:'French',es:'Spanish',ru:'Russian',th:'Thai'};
+  const resp = await fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:500,
+      messages:[{role:"user",content:`Translate this event description to ${langNames[targetLang]}. Return ONLY the translation, nothing else:\n\n${text}`}]})
+  });
+  if(!resp.ok) return text;
+  const d=await resp.json();
+  return d.content?.[0]?.text||text;
+}
+
+// Fetch events from phangan.events Tribe REST API
+async function fetchFromAPI(day){
+  const dt = day==='today' ? TODAY_DT : TMRW_DT;
+  const ds = dt.toISOString().split('T')[0];
+  const apiUrl = `https://phangan.events/wp-json/tribe/events/v1/events?start_date=${ds}&end_date=${ds}&per_page=30&status=publish`;
+  
+  // Try direct first, then CORS proxies
+  const attempts = [
+    apiUrl,
+    `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`,
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(apiUrl)}`,
+  ];
+
+  for (const url of attempts) {
+    try {
+      const r = await fetch(url, {headers:{'Accept':'application/json'}});
+      if(!r.ok) continue;
+      const d = await r.json();
+      if(!d.events?.length) continue;
+      console.log('API success via:', url.slice(0,40));
+      return d.events.map((e,i)=>tribeToEv(e,i));
+    } catch(e) {
+      console.log('Attempt failed:', url.slice(0,40), e.message);
+    }
+  }
+  throw new Error('All API attempts failed');
+}
+
+function tribeToEv(e,i){
+  const sdt=new Date(e.start_date), edt=new Date(e.end_date);
+  const st=pad(sdt.getHours())+':'+pad(sdt.getMinutes());
+  const et=pad(edt.getHours())+':'+pad(edt.getMinutes());
+  const vname=e.venue?.venue||'Koh Phangan';
+  const vtitle=(e.title||'').replace(/<[^>]+>/g,'');
+  const vdesc=(e.description||'').replace(/<[^>]+>/g,'').trim().slice(0,400);
+  const cost=e.cost?.trim()||''
+  const price=(!cost||cost==='0'||/free/i.test(cost))?null:(/donation/i.test(cost)?null:cost);
+  const donation=/donation/i.test(cost);
+  const area=parseArea(e);
+  const cat=guessCat(vtitle,vdesc,vname);
+  const img=e.image?.url||e.image?.sizes?.medium?.url||null;
+  const lineup=parseLineup((e.description||''). replace(/<[^>]+>/g,' '));
+  return {id:e.id||i+100,title:vtitle,venue:vname,area,cat,startTime:st,endTime:et,
+    endsNextDay:edt.getDate()!==sdt.getDate(),price,donation,desc:vdesc,
+    lineup,ticketUrl:e.url||null,imageUrl:img,mapsQ:encodeQ(vname)};
+}
+
+function pad(n){return String(n).padStart(2,'0');}
+function encodeQ(s){return encodeURIComponent(s+' Koh Phangan').replace(/%20/g,'+');}
+function parseArea(e){
+  if(!e.venue) return 'Koh Phangan';
+  const raw=(e.venue.address||''+' '+(e.venue.city||'')).toLowerCase();
+  const MAP={'sri thanu':'Sri Thanu','srithanu':'Sri Thanu','ban tai':'Ban Tai','baan tai':'Ban Tai','haad rin':'Haad Rin','haad yao':'Haad Yao','haad yuan':'Haad Yuan','haad chao phao':'Haad Chao Phao','chao phao':'Haad Chao Phao','thong sala':'Thong Sala','mae haad':'Mae Haad','leela':'Leela Beach','ao nai wok':'Ao Nai Wok'};
+  for(const[k,v] of Object.entries(MAP)){if(raw.includes(k))return v;}
+  const city=(e.venue.city||'').replace(/ko pha.ngan|koh phangan|surat thani|thailand/gi,'').trim();
+  return city||'Koh Phangan';
+}
+// todo.today category_id → categories
+// todo.today category_id → our categories
+// Multi-cat supported: e.g. Sound Healing DJ set → ['music','practices']
+const TODO_CAT_MAP = {
+  1:  ['practices'],          // Practices & Retreats — Breathwork, Healing
+  2:  ['movement'],           // Dance & Movement
+  3:  ['sport'],              // Sports
+  4:  ['practices'],          // Practices & Retreats — Somatic, Therapy
+  5:  ['workshop'],           // Art & Cinema
+  6:  ['workshop'],           // Community & Social
+  7:  'keyword',              // Mixed — needs keyword check
+  10: ['workshop'],           // Community & Social — Circles
+  13: ['workshop'],           // Education & Talks
+  17: ['party'],              // Parties
+  19: ['practices'],          // Practices & Retreats — Tantra
+};
+
+function guessCats(title, desc, venue, categoryId) {
+  const t = title.toLowerCase();
+  const s = (title+' '+(desc||'')+' '+(venue||'')).toLowerCase();
+
+  // Always check for multi-category signals in title
+  const extraCats = [];
+  if(/dj |live music|concert|trance|techno|house music|rave|live set/i.test(t)) extraCats.push('music');
+  if(/full moon|half moon|waterfall festival|equinox|fight night/i.test(t)) extraCats.push('festival');
+
+  // category_id based (most reliable)
+  if(categoryId && TODO_CAT_MAP[categoryId] && TODO_CAT_MAP[categoryId] !== 'keyword') {
+    const base = TODO_CAT_MAP[categoryId];
+    const combined = [...new Set([...base, ...extraCats])];
+    return combined;
+  }
+
+  // keyword fallback (for category 7 or no categoryId)
+  const cats = [];
+  if(/dj |live music|concert|trance|techno|house|bass|rave|jam session|sunset session|live set/i.test(s)) cats.push('music');
+  if(/party|parties|haflagoa|club night|dance floor/i.test(s) && !cats.includes('music')) cats.push('party');
+  if(/yoga|ashtanga|vinyasa|yin |hatha|mysore|kundalini|pranayama|breathwork|meditation|sound heal|gong|cacao|ceremony|reiki|retreat|tantra|somatic|rebirthing|shamanic|therapy|healing/i.test(s)) cats.push('practices');
+  if(/animal flow|acro|handstand|ecstatic|innerdance|conscious dance/i.test(s)) cats.push('movement');
+  if(/crossfit|muay thai|boxing|hyrox|workout|fitness|martial|running|cycling/i.test(s)) cats.push('sport');
+  if(/art jam|cooking|human design|constellation|circle|talk|lecture|workshop|market|swap/i.test(s)) cats.push('workshop');
+  if(/full moon|half moon|waterfall|fight night|equinox|festival/i.test(s)) cats.push('festival');
+
+  // add extra cats
+  extraCats.forEach(c => { if(!cats.includes(c)) cats.push(c); });
+
+  return cats.length ? cats : ['practices'];
+}
+
+// Backward compat
+function guessCat(t, d, v) {
+  return guessCats(t, d||'', v||'', null)[0] || 'practices';
+}
+function parseLineup(desc){
+  const m=desc.match(/line[- ]?up[:\s]+([^\n]+)/i);
+  if(!m)return[];
+  return m[1].split(/[,·|]/).map(s=>s.trim()).filter(s=>s.length>1&&s.length<50).slice(0,8);
+}
+
+// Claude fallback
+// ── todo.today API ──────────────────────────────────────
+const TODO_TODAY_URL = 'https://todo.today/api/todo-today/v1/events';
+
+function parseTodoTime(timeStr) {
+  if (!timeStr) return '00:00';
+  const m = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+  if (!m) return '00:00';
+  let h = parseInt(m[1]), min = parseInt(m[2]);
+  const ap = m[3].toUpperCase();
+  if (ap === 'PM' && h < 12) h += 12;
+  if (ap === 'AM' && h === 12) h = 0;
+  return String(h).padStart(2,'0') + ':' + String(min).padStart(2,'0');
+}
+
+async function fetchFromTodoToday(day){
+  const eventDate = day === 'today' ? 'today' : 'tomorrow';
+  const ctrl = new AbortController();
+  const timer = setTimeout(()=>ctrl.abort(), 8000);
+  try{
+    const url = `${TODO_TODAY_URL}?channel=koh-phangan&event_date=${eventDate}`;
+    const r = await fetch(url, {
+      signal: ctrl.signal,
+      headers: {'Accept': 'application/json'}
+    });
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('todo.today HTTP '+r.status);
+    const d = await r.json();
+
+    // Flatten all sections, skip highlight/tomorrow/up_next
+    const skip = ['today_highlight','more_tomorrow','up_next'];
+    const allEvents = [];
+    const seen = new Set();
+    (d.sections||[]).forEach(sec => {
+      if(skip.includes(sec.key)) return;
+      (sec.events||[]).forEach(e => {
+        if(seen.has(e.id)) return;
+        seen.add(e.id);
+        allEvents.push(e);
+      });
+    });
+
+    if(!allEvents.length) throw new Error('todo.today: no events');
+
+    return allEvents.map(e => {
+      const title = (e.name || e.short_name || '').trim();
+      const venue = (e.venue || 'Koh Phangan').trim();
+      const startTime = parseTodoTime(e.start_time);
+      const endTime   = parseTodoTime(e.end_time);
+      const priceRaw  = e.price_label || '';
+      const price     = (!priceRaw || /free/i.test(priceRaw)) ? null : priceRaw;
+      const cats      = guessCats(title, '', venue, e.category_id);
+      return {
+        id:          e.id,
+        title,
+        venue,
+        area:        e.area || parseAreaFromText(venue),
+        cat:         cats[0],
+        cats:        cats,
+        startTime,
+        endTime,
+        endsNextDay: false,
+        price,
+        donation:    /donation/i.test(priceRaw),
+        desc:        e.short_name || '',
+        lineup:      [],
+        ticketUrl:   e.link || e.google_map || null,
+        imageUrl:    e.image || null,
+        mapsQ:       encodeQ(venue),
+        source:      'todo.today'
+      };
+    });
+  }catch(err){clearTimeout(timer); throw err;}
+}
+
+function parseAreaFromText(text){
+  const t = text.toLowerCase();
+  const MAP = {'sri thanu':'Sri Thanu','srithanu':'Sri Thanu','ban tai':'Ban Tai','haad rin':'Haad Rin','haad yao':'Haad Yao','haad yuan':'Haad Yuan','chao phao':'Haad Chao Phao','thong sala':'Thong Sala','mae haad':'Mae Haad','leela':'Leela Beach','maduea wan':'Mae Haad'};
+  for(const[k,v] of Object.entries(MAP)){if(t.includes(k))return v;}
+  return 'Koh Phangan';
+}
+
+async function fetchFromClaude(day){
+  const dt=day==='today'?TODAY_DT:TMRW_DT;
+  const iso=dt.toISOString().split('T')[0];
+  const prompt=`Search phangan.events for ALL Koh Phangan events on ${fmtDate(dt)} (${iso}).
+Return ONLY a JSON array. Each object: {id,title,venue,area,cat,startTime,endTime,endsNextDay,price,donation,desc,lineup,ticketUrl,imageUrl,mapsQ}
+- area: exact neighborhood (Sri Thanu / Ban Tai / Haad Rin / Haad Yuan / Leela Beach / Haad Chao Phao / Mae Haad / Thong Sala)
+- cat: party|wellness|yoga|ecstatic|festival
+- imageUrl: null
+- desc: full description from phangan.events (2-3 sentences)
+- lineup: array of strings
+Find ALL events including wellness, yoga, ecstatic dance, live music, ceremonies.`;
+  const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:4000,tools:[{type:"web_search_20250305",name:"web_search"}],messages:[{role:"user",content:prompt}]})});
+  if(!r.ok) throw new Error('Claude '+r.status);
+  const d=await r.json();
+  const txt=d.content.filter(b=>b.type==='text').map(b=>b.text).join('');
+  const m=txt.match(/\[[\s\S]*\]/);
+  if(!m) throw new Error('No JSON');
+  return JSON.parse(m[0]);
+}
+
+// ══════════════════════════════════════════════════════
+// FAVORITES
+// ══════════════════════════════════════════════════════
+let favs = JSON.parse(localStorage.getItem('fp-favs')||'[]');
+function isFav(id){return favs.includes(String(id));}
+function toggleFav(id,e){
+  if(e){e.stopPropagation();e.preventDefault();}
+  const sid=String(id);
+  favs=favs.includes(sid)?favs.filter(x=>x!==sid):[...favs,sid];
+  localStorage.setItem('fp-favs',JSON.stringify(favs));
+  renderEvents();renderFavs();updateFavBadge();
+}
+function clearFavs(){favs=[];localStorage.setItem('fp-favs','[]');renderFavs();updateFavBadge();renderEvents();}
+function updateFavBadge(){
+  const badge=document.getElementById('fav-tab-cnt');
+  if(!badge)return;
+  if(favs.length){badge.textContent=favs.length;badge.style.display='flex';}
+  else badge.style.display='none';
+}
+function renderFavs(){
+  const all=[...allEvs.today.map(e=>({...e,_day:'today'})),...allEvs.tomorrow.map(e=>({...e,_day:'tomorrow'}))];
+  const saved=all.filter(e=>isFav(e.id));
+  const el=document.getElementById('fav-list');
+  if(!el)return;
+  if(!saved.length){el.innerHTML='<div class="empty" style="padding-top:60px">💛<br><br>No saved events yet.<br>Tap ♡ on any event card to save it.</div>';return;}
+  el.innerHTML=saved.map(e=>buildCard(e,e._day==='tomorrow')).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// PWA INSTALL
+// ══════════════════════════════════════════════════════
+let deferredInstallPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();deferredInstallPrompt=e;
+  const bar=document.getElementById('pwa-bar');
+  if(bar&&!localStorage.getItem('fp-pwa-dismissed'))bar.style.display='flex';
+});
+function installPWA(){
+  if(!deferredInstallPrompt)return;
+  deferredInstallPrompt.prompt();
+  deferredInstallPrompt.userChoice.then(r=>{
+    if(r.outcome==='accepted')localStorage.setItem('fp-pwa-dismissed','1');
+    document.getElementById('pwa-bar').style.display='none';
+    deferredInstallPrompt=null;
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// OPEN-METEO WEATHER
+// ══════════════════════════════════════════════════════
+async function fetchWeather(){
+  try{
+    const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=9.75&longitude=100.03&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,weather_code&daily=sunrise,sunset&wind_speed_unit=kmh&timezone=Asia%2FBangkok&forecast_days=1');
+    if(!r.ok)return;
+    const d=await r.json();
+    const c=d.current;
+    const temp=Math.round(c.temperature_2m);
+    const hum=c.relative_humidity_2m;
+    const wind=Math.round(c.wind_speed_10m);
+    const wdir=c.wind_direction_10m;
+    const wmo=c.weather_code;
+    const ico=wmo<=1?'☀️':wmo<=3?'⛅':wmo<=48?'🌫️':wmo<=67?'🌧️':wmo<=77?'❄️':wmo<=82?'🌦️':wmo<=99?'⛈️':'☀️';
+    const dirs=['N','NE','E','SE','S','SW','W','NW'];
+    const dirStr=dirs[Math.round(wdir/45)%8];
+
+    // Sunrise / Sunset — "2026-03-22T06:15" format
+    const sunriseISO = d.daily?.sunrise?.[0]||'';
+    const sunsetISO  = d.daily?.sunset?.[0]||'';
+    const fmtSun = iso => {
+      if(!iso) return '—';
+      const t = new Date(iso);
+      return t.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Bangkok'});
+    };
+    const sunriseStr = fmtSun(sunriseISO);
+    const sunsetStr  = fmtSun(sunsetISO);
+
+    // Countdown to sunset (most useful for party goers)
+    const now = new Date();
+    const cdSun = iso => {
+      if(!iso) return '';
+      const t = new Date(iso);
+      const diff = t - now;
+      if(diff < 0) return 'passed';
+      const h = Math.floor(diff/3600000);
+      const m = Math.floor((diff%3600000)/60000);
+      return h>0 ? `in ${h}h ${m}m` : `in ${m}m`;
+    };
+
+    // Header — show sunset if it hasn't passed yet
+    const htmp=document.getElementById('htemp');
+    if(htmp) htmp.innerHTML=`${ico} ${temp}°C`;
+
+    // Also show sunset in header weather widget
+    const hmoon=document.getElementById('hmoon');
+    // Only prepend sunset if within 3h
+    const sunsetDate = sunsetISO ? new Date(sunsetISO) : null;
+    if(sunsetDate && (sunsetDate - now) > 0 && (sunsetDate - now) < 3*3600000){
+      const m2=Math.floor((sunsetDate-now)/60000);
+      const h2=Math.floor(m2/60), mm2=m2%60;
+      const cdTxt = h2>0?`${h2}h ${mm2}m`:m2+'m';
+      // inject sunset countdown next to moon — only if space
+      if(hmoon && !hmoon.textContent.includes('🌄')){
+        hmoon.textContent = hmoon.textContent + ' · 🌄 ' + cdTxt;
+      }
+    }
+
+    // Modal
+    const tIco=document.getElementById('wx-temp-ico');
+    const tVal=document.getElementById('wx-temp-val');
+    const hVal=document.getElementById('wx-hum-val');
+    if(tIco)tIco.textContent=ico;
+    if(tVal)tVal.textContent=temp+'°C';
+    if(hVal)hVal.textContent=hum+'%';
+
+    // Sunrise card
+    const srVal=document.getElementById('wx-sunrise');
+    const srCd=document.getElementById('wx-sunrise-cd');
+    if(srVal)srVal.textContent=sunriseStr;
+    if(srCd)srCd.textContent=cdSun(sunriseISO);
+
+    // Sunset card
+    const ssVal=document.getElementById('wx-sunset');
+    const ssCd=document.getElementById('wx-sunset-cd');
+    if(ssVal)ssVal.textContent=sunsetStr;
+    if(ssCd)ssCd.textContent=cdSun(sunsetISO);
+
+    // Wind card
+    const wv=document.getElementById('wx-wind-val');
+    const ws=document.getElementById('wx-wind-dir');
+    if(wv)wv.textContent=wind+' km/h';
+    if(ws)ws.textContent=dirStr+' direction';
+
+  }catch(e){console.log('Weather fetch failed:',e.message);}
+}
+
+// ══════════════════════════════════════════════════════
+// EVENT DATA FETCHING — Railway → phangan.events → Claude → offline
+// ══════════════════════════════════════════════════════
+function showSkeletons(){
+  const skels=Array(4).fill(0).map(()=>`
+    <div class="skel">
+      <div class="skel-line w80"></div>
+      <div class="skel-line w40"></div>
+      <div class="skel-line w60"></div>
+    </div>`).join('');
+  document.getElementById('ev-list').innerHTML=skels;
+}
+
+async function fetchFromRailway(day){
+  const ctrl=new AbortController();
+  const timer=setTimeout(()=>ctrl.abort(),8000);
+  try{
+    const r=await fetch(SCRAPER_URL+'/events?day='+day,{signal:ctrl.signal});
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('Railway HTTP '+r.status);
+    const d=await r.json();
+    if(!d.events?.length) throw new Error('Railway: no events');
+    return d.events.map(e=>({
+      id:        e.id||Math.random().toString(36).slice(2),
+      title:     e.title||'Untitled',
+      venue:     e.venue||'Koh Phangan',
+      area:      e.area||'Koh Phangan',
+      cat:       guessCat(e.title||'',e.description||'',e.venue||''),
+      startTime: e.time_start||'00:00',
+      endTime:   e.time_end||'00:00',
+      endsNextDay: false,
+      price:     e.price||null,
+      donation:  /donation/i.test(e.price||''),
+      desc:      (e.description||'').slice(0,300),
+      lineup:    [],
+      ticketUrl: e.url||null,
+      imageUrl:  null,
+      mapsQ:     encodeQ(e.venue||''),
+      source:    e.source||'railway'
+    }));
+  }catch(err){clearTimeout(timer);throw err;}
+}
+
+async function fetchEvents(){
+  if(fetching)return;
+  fetching=true;
+  showSkeletons();
+  // Check cache
+  const cached=cache[curDay];
+  if(cached.data&&Date.now()-cached.ts<CACHE_TTL){
+    allEvs[curDay]=cached.data;
+    renderEvents();
+    setAIBar('ok','✓ '+cached.data.length+' events (cached)');
+    fetching=false;
+    return;
+  }
+  let evs=null, source='';
+  // 1️⃣ Railway scraper
+  try{
+    setAIBar('loading','🚂 Fetching from Railway scraper…');
+    evs=await fetchFromRailway(curDay);
+    source='Railway scraper';
+  }catch(e1){
+    console.log('[Railway] failed:',e1.message);
+    // 2️⃣ todo.today direct API
+    try{
+      setAIBar('loading','📍 Fetching from todo.today…');
+      evs=await fetchFromTodoToday(curDay);
+      source='todo.today';
+    }catch(e2){
+      console.log('[todo.today] failed:',e2.message);
+      // 3️⃣ phangan.events REST API
+      try{
+        setAIBar('loading','📡 Fetching from phangan.events…');
+        evs=await fetchFromAPI(curDay);
+        source='phangan.events';
+      }catch(e3){
+        console.log('[phangan.events] failed:',e3.message);
+        // 4️⃣ Claude AI web search
+        try{
+          setAIBar('loading','🔍 Searching via Claude AI…');
+          evs=await fetchFromClaude(curDay);
+          source='Claude AI';
+        }catch(e4){
+          console.log('[Claude] failed:',e4.message);
+          // 5️⃣ Offline fallback
+          evs=curDay==='today'?FALLBACK_TODAY:FALLBACK_TMRW;
+          source='offline';
+        }
+      }
+    }
+  }
+  if(evs&&evs.length&&source!=='offline'){
+    cache[curDay]={data:evs,ts:Date.now()};
+    allEvs[curDay]=evs;
+    renderEvents();
+    const timeStr=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+    setAIBar('ok',`✓ ${evs.length} events · ${timeStr}`);
+  }else if(source==='offline'){
+    allEvs[curDay]=evs;
+    renderEvents();
+    setAIBar('err','⚠ Using offline data · tap ↻ to retry');
+  }else{
+    allEvs[curDay]=curDay==='today'?FALLBACK_TODAY:FALLBACK_TMRW;
+    renderEvents();
+    setAIBar('err','⚠ No events found · offline data shown');
+  }
+  fetching=false;
+}
+
+// Auto-refresh every 30 minutes
+setInterval(()=>{
+  cache.today={data:null,ts:0};
+  cache.tomorrow={data:null,ts:0};
+  fetchEvents();
+},30*60*1000);
+
+function setAIBar(cls,msg){
+  const b=document.getElementById('ai-bar');
+  b.className='ai-bar'+(cls==='ok'?' ok':'')+(cls==='err'?' err':'');
+  document.getElementById('ai-spin').style.display=cls==='loading'?'':'none';
+  document.getElementById('ai-msg').textContent=msg;
+}
+
+// ══════════════════════════════════════════════════════
+// RENDER EVENTS
+// ══════════════════════════════════════════════════════
+function catCol(c){return{music:'var(--music)',party:'var(--party)',practices:'var(--practices)',movement:'var(--movement)',sport:'var(--sport)',workshop:'var(--workshop)',festival:'var(--festival)',restaurant:'var(--restaurant)'}[c]||'var(--practices)';}
+function pStr(ev){if(ev.donation)return i('donation');return ev.price||'';}
+function locMoji(a){const l=a.toLowerCase();if(l.includes('boat')||l.includes('yuan'))return'⛵';if(l.includes('beach')||l.includes('haad rin'))return'🏖️';if(l.includes('hilltop')||l.includes('mountain'))return'⛰️';if(l.includes('jungle'))return'🌿';if(l.includes('bay'))return'🌊';return'📍';}
+
+function getCd(ev){
+  const now=new Date(), nm=now.getHours()*60+now.getMinutes();
+  const[sh,sm]=ev.startTime.split(':').map(Number);
+  const start=sh*60+sm;
+  // If endTime is missing or 00:00, assume 2h duration
+  let end;
+  if(!ev.endTime||ev.endTime==='00:00'){
+    end = start + 120;
+  } else {
+    const[eh,em]=ev.endTime.split(':').map(Number);
+    end=(ev.endsNextDay?eh+24:eh)*60+em;
+    // if end <= start, it ends next day
+    if(end<=start) end+=24*60;
+  }
+  if(nm>=start&&nm<end)return{l:'LIVE',s:'now'};
+  if(nm>=end)return{l:'—',s:'later'};
+  const diff=start-nm;
+  if(diff<60)return{l:diff+'m',s:diff<30?'now':'soon'};
+  const hh=Math.floor(diff/60),mm=diff%60;
+  if(hh<3)return{l:mm?hh+'h '+mm+'m':hh+'h',s:'soon'};
+  return{l:hh+'h',s:'later'};
+}
+function stCls(s){return{now:'s-now',soon:'s-soon',later:'s-later',tomorrow:'s-tmrw'}[s]||'s-later';}
+
+function buildCard(ev, isTmrw){
+  const cd = isTmrw?{l:ev.startTime,s:'tomorrow'}:getCd(ev);
+  const col = catCol(ev.cat);
+  const ps = pStr(ev);
+  const area = (ev.area||'Koh Phangan').split('(')[0].split(',')[0].trim();
+  const faved = isFav(ev.id);
+  const imgUrl = ev.imageUrl || getPhotoUrl(ev.venue);
+  const sid = String(ev.id).replace(/['"]/g,'');
+  const catEmoji = ev.cat==='party'?'🎉':ev.cat==='wellness'?'🌿':ev.cat==='yoga'?'🧘':ev.cat==='ecstatic'?'💃':ev.cat==='festival'?'🎪':'⭐';
+  const lineupHtml = ev.lineup&&ev.lineup.length
+    ? `<div class="lineup-chips">${ev.lineup.slice(0,4).map(a=>`<span class="lineup-chip">♪ ${a}</span>`).join('')}${ev.lineup.length>4?`<span class="lineup-chip">+${ev.lineup.length-4} more</span>`:''}</div>`
+    : '';
+  const favHtml = `<button class="ecard-fav${faved?' saved':''}" data-eid="${sid}" onclick="event.stopPropagation();toggleFav(this.dataset.eid,event)">${faved?'♥':'♡'}</button>`;
+  const imgHtml = imgUrl
+    ? `<div class="ecard-img-wrap"><img class="ecard-img" src="${imgUrl}" alt="" loading="lazy" onerror="this.parentNode.style.display='none'"><div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,var(--card) 100%)"></div><span class="ecard-cat-badge">${(ev.cats||[ev.cat]).map(c=>c.toUpperCase()).join(' · ')}</span>${favHtml}</div>`
+    : `<div style="position:relative"><div class="ecard-img-wrap" style="display:flex;align-items:center;justify-content:center;height:44px;background:linear-gradient(135deg,${col}18,${col}06);border-bottom:1px solid var(--border)"><div style="font-size:.6rem;font-weight:700;color:${col};letter-spacing:.06em">${(ev.cats||[ev.cat]).map(c=>c.toUpperCase()).join(' · ')}</div></div>${favHtml}</div>`;
+  return `<div class="ecard" data-eid="${sid}" data-tmrw="${isTmrw?1:0}" onclick="openEv(this.dataset.eid, +this.dataset.tmrw)">
+  ${imgHtml}
+  <div class="ecard-inner">
+    <div class="ecard-stripe" style="background:${col}"></div>
+    <div class="ecard-body">
+      <div class="ecard-row1">
+        <div class="ecard-title">${ev.title}</div>
+        <span class="estat ${stCls(cd.s)}">${cd.s==='now'?'● LIVE':cd.l}</span>
+      </div>
+      <div class="emeta">
+        <span class="emi"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${ev.startTime||'—'} – ${ev.endTime||'—'}</span>
+        <span class="emi">${locMoji(ev.area||'')} ${ev.venue||area}</span>
+        ${ps?`<span class="eprice">${ps}</span>`:''}
+      </div>
+      ${lineupHtml}
+      <div class="ecard-desc">${ev.desc||''}</div>
+      <div class="ecard-acts">
+        <button class="abtn" data-eid="${sid}" data-tmrw="${isTmrw?1:0}" onclick="event.stopPropagation();openEv(this.dataset.eid,+this.dataset.tmrw);setTimeout(toggleRemind,80)">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          ${i('remind')}
+        </button>
+        ${ev.ticketUrl
+          ? `<a href="${ev.ticketUrl}" target="_blank" rel="noopener" class="abtn abtn-ticket" onclick="event.stopPropagation()"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M2 9a3 3 0 110-6 3 3 0 010 6z"/><path d="M13 20.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM2 9v10l9 3"/><line x1="22" y1="2" x2="11" y2="13"/></svg>${i('get-ticket')}</a>`
+          : `<button class="abtn" onclick="event.stopPropagation();openMaps('${(ev.mapsQ||'').replace(/'/g,'')}')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>${i('directions')}</button>`
+        }
+      </div>
+    </div>
+  </div>
+</div>`;
+}
+let searchQ = '';
+function searchEvents(q){ searchQ=q.toLowerCase().trim(); renderEvents(); }
+
+function renderEvents(){
+  const src=allEvs[curDay];
+  let f=curCat==='all'?src:src.filter(e=>{
+    const cats = e.cats || [e.cat];
+    return cats.includes(curCat);
+  });
+  if(searchQ){
+    f=f.filter(e=>
+      e.title.toLowerCase().includes(searchQ)||
+      (e.venue||'').toLowerCase().includes(searchQ)||
+      (e.area||'').toLowerCase().includes(searchQ)||
+      (e.desc||'').toLowerCase().includes(searchQ)||
+      (e.lineup||[]).some(a=>a.toLowerCase().includes(searchQ))
+    );
+  }
+  document.getElementById('ev-list').innerHTML=f.length?f.map(e=>buildCard(e,curDay==='tomorrow')).join(''):`<div class="empty">No events found</div>`;
+  document.getElementById('ev-cnt').textContent=f.length+' events';
+  document.getElementById('ev-lbl').textContent=curDay==='today'?'Today\'s Events':'Tomorrow\'s Events';
+  updateLiveBanner();
+  updateCD();
+}
+
+function updateLiveBanner(){
+  const now=new Date(),nm=now.getHours()*60+now.getMinutes();
+  const src=allEvs.today;
+  const title=document.getElementById('live-title');
+  const dot=document.getElementById('live-dot');
+  const sub=document.getElementById('live-sub');
+
+  const active=src.filter(e=>{
+    const[sh,sm]=e.startTime.split(':').map(Number);
+    const start=sh*60+sm;
+    let end;
+    if(!e.endTime||e.endTime==='00:00') end=start+120;
+    else{const[eh,em]=e.endTime.split(':').map(Number);end=(e.endsNextDay?eh+24:eh)*60+em;if(end<=start)end+=1440;}
+    return nm>=start&&nm<end;
+  });
+
+  const soon=src.filter(e=>{
+    const[sh,sm]=e.startTime.split(':').map(Number);
+    const s=sh*60+sm;
+    return s>nm&&s-nm<=120;
+  });
+
+  if(active.length){
+    if(title) title.textContent='🔴 Happening right now';
+    if(dot) dot.style.background='#ff4d6d';
+    sub.textContent=active.length+' event'+(active.length>1?'s':'')+' live'+(soon.length?' · '+soon.length+' starting soon':'');
+  } else if(soon.length){
+    if(title) title.textContent='⏱ Starting soon';
+    if(dot) dot.style.background='#ffd044';
+    sub.textContent=soon.length+' event'+(soon.length>1?'s':'')+' within 2h';
+  } else {
+    const next=src.slice().sort((a,b)=>a.startTime.localeCompare(b.startTime)).find(e=>{
+      const[sh,sm]=e.startTime.split(':').map(Number);return sh*60+sm>nm;
+    });
+    if(title) title.textContent='📅 What\'s on today';
+    if(dot) dot.style.background='rgba(255,255,255,.3)';
+    sub.textContent=next?'Next: '+next.title+' at '+next.startTime:'Check Tomorrow';
+  }
+}
+
+function showLive(){curDay='today';curCat='all';document.querySelectorAll('.dchip').forEach((c,idx)=>c.classList.toggle('active',idx===0));document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('active'));document.querySelector('.fchip-all').classList.add('active');renderEvents();}
+function setDay(d,el){curDay=d;document.querySelectorAll('.dchip').forEach(c=>c.classList.remove('active'));el.classList.add('active');if(!allEvs[d].length)fetchEvents();else renderEvents();}
+function setCat(c,el){curCat=c;document.querySelectorAll('.fchip').forEach(x=>x.classList.remove('active'));el.classList.add('active');renderEvents();}
+
+// ══════════════════════════════════════════════════════
+// EVENT MODAL — full detail with translation
+// ══════════════════════════════════════════════════════
+async function openEv(id, isTmrw){
+  const src=isTmrw?allEvs.tomorrow:allEvs.today;
+  const ev=src.find(e=>String(e.id)===String(id));
+  if(!ev)return;
+  activeEv=ev;
+  const col=catCol(ev.cat);
+  document.getElementById('m-cat').textContent=ev.cat.toUpperCase();
+  document.getElementById('m-cat').style.color=col;
+  document.getElementById('m-title').textContent=ev.title;
+  document.getElementById('m-venue').innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>${ev.venue} · ${ev.area}`;
+  document.getElementById('m-time-row').innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${ev.startTime} – ${ev.endTime}${ev.endsNextDay?' (next day)':''} `;
+  const evDate = isTmrw ? TMRW_DT : TODAY_DT;
+  document.getElementById('m-date').textContent = evDate.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+  document.getElementById('m-price').textContent=pStr(ev)||'—';
+  const cd=isTmrw?{l:ev.startTime,s:'tomorrow'}:getCd(ev);
+  document.getElementById('m-status').textContent=cd.s==='now'?'🔴 LIVE':(cd.s==='soon'?'🟡 '+cd.l:'⬜ '+cd.l);
+  // Description — show loading then translate
+  const descEl=document.getElementById('m-desc');
+  descEl.textContent=ev.desc||'—';
+  if(lang!=='en'&&ev.desc){
+    descEl.style.opacity='0.5';
+    translateDesc(ev.desc,lang).then(t=>{descEl.textContent=t;descEl.style.opacity='1';});
+  }
+  // Lineup
+  const lsec=document.getElementById('m-lineup-sec'), ll=document.getElementById('m-lineup');
+  if(ev.lineup&&ev.lineup.length){lsec.style.display='';ll.innerHTML=ev.lineup.map(a=>`<span class="ltag">${a}</span>`).join('');}
+  else lsec.style.display='none';
+  // Ticket
+  document.getElementById('m-ticket-wrap').innerHTML=ev.ticketUrl
+    ?`<a href="${ev.ticketUrl}" target="_blank" rel="noopener" class="mact mact-ticket" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:2px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M2 9a3 3 0 110-6 3 3 0 010 6z"/><path d="M13 20.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM2 9v10l9 3"/><line x1="22" y1="2" x2="11" y2="13"/></svg>${i('get-ticket')}</a>`:''
+  ;
+  document.getElementById('remind-panel').classList.remove('open');
+  document.getElementById('share-panel').classList.remove('open');
+  document.getElementById('ev-modal').classList.add('open');
+}
+
+function toggleRemind(){document.getElementById('share-panel').classList.remove('open');document.getElementById('remind-panel').classList.toggle('open');}
+function toggleShare(){document.getElementById('remind-panel').classList.remove('open');document.getElementById('share-panel').classList.toggle('open');}
+function setR(m){
+  if(!('Notification'in window)){showToast('Notifications not supported');return;}
+  Notification.requestPermission().then(p=>{
+    if(p==='granted'&&activeEv){const l=m<60?m+' min':(m/60)+'h';showToast('Reminder set: '+l+' before event');document.getElementById('remind-panel').classList.remove('open');}
+    else showToast('Allow notifications first');
+  });
+}
+function shareWA(){if(!activeEv)return;window.open('https://wa.me/?text='+encodeURIComponent('🏝️ '+activeEv.title+'\n📍 '+activeEv.venue+'\n⏰ '+activeEv.startTime+'\n\nflow.phangan'));}
+function shareTG(){if(!activeEv)return;window.open('https://t.me/share/url?url=https://flow.phangan&text='+encodeURIComponent('🏝️ '+activeEv.title+' @ '+activeEv.venue));}
+function cpLink(){navigator.clipboard?.writeText('https://flow.phangan').then(()=>showToast('Link copied!'));}
+function doDir(){if(activeEv)openMaps(activeEv.mapsQ||activeEv.venue+'+Koh+Phangan');}
+function openMaps(q){window.open('https://maps.google.com/maps?q='+q);}
+
+// ══════════════════════════════════════════════════════
+// VENUE ILLUSTRATIONS — AI-style cartoon SVG art
+// Each venue gets a unique hand-crafted cartoon scene
+// ══════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
+// VENUE PHOTOS — Railway scraper'dan çekilir
+// ══════════════════════════════════════════════════════
+const SCRAPER_URL = 'https://phangan-scraper-production.up.railway.app';
+const photoCache = {};
+
+async function loadAllVenuePhotos() {
+  try {
+    const r = await fetch(SCRAPER_URL + '/venues');
+    if (!r.ok) return;
+    const data = await r.json();
+    Object.assign(photoCache, data);
+    console.log('Venue photos loaded:', Object.keys(photoCache).length);
+  } catch(e) {
+    console.log('Could not load venue photos:', e.message);
+  }
+}
+
+function getPhotoUrl(venueName) {
+  return photoCache[venueName] || null;
+}
+
+// Kategori bazlı fallback gradients
+const CAT_GRAD = {
+  music:      'linear-gradient(135deg,#1a0010,#3a0030)',
+  party:      'linear-gradient(135deg,#180828,#3a1058)',
+  practices:  'linear-gradient(135deg,#091022,#0d2040)',
+  movement:   'linear-gradient(135deg,#1a1000,#3a2800)',
+  sport:      'linear-gradient(135deg,#1a0000,#3a0000)',
+  workshop:   'linear-gradient(135deg,#001a1a,#003030)',
+  festival:   'linear-gradient(135deg,#100818,#2a0a30)',
+  restaurant: 'linear-gradient(135deg,#161006,#2a1a00)',
+};
+
+
+
+
+// ══════════════════════════════════════════════════════
+// VENUES DATA
+// ══════════════════════════════════════════════════════
+const VENUES = {
+  party:[
+    {name:"STONA Jungle Club",area:"Ban Tai Jungle",type:"party",desc:"Community party venue next to Jungle Experience on Ban Tai–Thong Nai Pan road. Custom outdoor sound, wet pool, chill-out zones, fire dancers, art market. 'UNITY IN DIVERSITY.'",facs:["Wet Pool","Massive Sound","Fire Dancers","Art Market","Food Stand"],ig:"@stonakohphangan",web:null,maps:"STONA+Jungle+Club+Koh+Phangan"},
+    {name:"Retro Mountain",area:"Hilltop jungle",type:"festival",desc:"Hilltop jungle arena hosting Equinox Awakening (8 editions) and underground techno/psytrance. Elevated dancefloor with mountain views. Alternative culture stronghold.",facs:["Hilltop Stage","Mountain Views","Jungle Setting","Multi-Level"],ig:"@retromountainphangan",web:null,maps:"Retro+Mountain+Koh+Phangan"},
+    {name:"Lighthouse Bungalows",area:"Leela Beach",type:"party",desc:"Iconic venue on a wooden bridge over the sea at the tip of Leela Beach. Melodic house & techno Tue & Fri, sunset to sunrise. Free entry before 9pm.",facs:["Bridge Over Sea","Oceanfront Floor","Sunset Views","Free before 9pm"],ig:"@lighthousekohphangan",web:null,maps:"Lighthouse+Bungalows+Leela+Beach+Koh+Phangan"},
+    {name:"SEASIDE Sunset Bar",area:"Ban Tai Beach",type:"party",desc:"Beachfront covered dancefloor, hi-end sound, laser visuals & fire shows. Home of Solar Conexion. Free before 21:00. VIP tables available.",facs:["Beachfront","Covered Floor","Laser System","Fire Shows","Art Market","VIP Tables"],ig:"@seasidesunsetbar",web:null,maps:"SEASIDE+Sunset+Bar+Ban+Tai+Koh+Phangan"},
+    {name:"Bambu Huts",area:"Haad Yuan (boat from Haad Rin)",type:"party",desc:"Turquoise water, granite boulders, bamboo bar. Island's most beloved Sunday session 12pm–2am. Taxi boat only from Haad Rin Pier.",facs:["Private Beach","Bamboo Bar","Bungalows","Boat Access Only"],ig:"@bambuhuts",web:null,maps:"Bambu+Huts+Haad+Yuan+Koh+Phangan"},
+    {name:"Eden Garden",area:"Haad Yuan (boat from Haad Rin)",type:"party",desc:"Legendary Sat night–Sun morning free party at secluded Haad Yuan. Deep house, disco & techno in the jungle. No videos, no drones, no shoes. Always free.",facs:["Isolated Beach","Jungle Floor","Free Entry","Taxi Boat"],ig:"@edengardenkohphangan",web:null,maps:"Eden+Garden+Haad+Yuan+Koh+Phangan"},
+    {name:"Bluerama",area:"Hilltop, Ban Tai",type:"party",desc:"Hilltop infinity pool with panoramic Gulf views. Saturday sunset pool parties with house music. Skybar & restaurant daily.",facs:["Infinity Pool","Ocean Views","Skybar","Restaurant"],ig:"@blueramakohphangan",web:null,maps:"Bluerama+Koh+Phangan"},
+    {name:"Waterfall Festival",area:"Jungle (near waterfall)",type:"festival",desc:"4-stage jungle festival around natural waterfalls. Weekly Wed/Sat + Full Moon dates. Hi-tech sound, fire & lasers.",facs:["4 Stages","Natural Waterfall","Swimming Pool","Laser Shows","Fire"],ig:"@waterfallpartykohphangan",web:"https://waterfallpartykohphangan.com",maps:"Waterfall+Festival+Koh+Phangan"},
+    {name:"Haad Rin Beach",area:"Haad Rin (south tip)",type:"festival",desc:"Home of the original Full Moon Party since the 1980s. The beach transforms each full moon into a massive open-air festival. Multiple bars, fire shows & body paint.",facs:["Full Moon Party","Multiple Bars","Body Paint","Fire Shows"],ig:null,web:"https://fullmoonparty-thailand.com",maps:"Haad+Rin+Beach+Koh+Phangan"},
+    {name:"Merkaba Beach Club",area:"Ban Tai",type:"party",desc:"Weekly Sunday Grooves from 11am with live sax & top DJs. Right on the sand — 300 THB full day.",facs:["Beachfront","Sunday Sessions","Live Sax","Full Bar"],ig:"@merkababeachclub",web:null,maps:"Merkaba+Beach+Club+Ban+Tai+Koh+Phangan"},
+    {name:"Chill Up Club",area:"Ban Tai",type:"party",desc:"Free entry psytrance Thu & Sat. Sunday karaoke, Monday Madness electronic. Weekly institution on Ban Tai Main Road.",facs:["Free Entry Thu & Sat","Sunday Karaoke","Monday Madness"],ig:"@chillup.phangan",web:null,maps:"Chill+Up+Club+Ban+Tai+Koh+Phangan"},
+    {name:"Unclave",area:"Ban Tai",type:"party",desc:"Underground deep tech & melodic techno. Hosted Armen Miran (Burning Man). Uncompromising sound, intimate capacity.",facs:["Underground","Hi-Tech Sound","International Headliners"],ig:"@unclaveclub",web:null,maps:"Unclave+Club+Ban+Tai+Koh+Phangan"},
+    {name:"Halfmoon Festival",area:"Magical Forest, Ban Tai",type:"festival",desc:"The legendary Halfmoon Festival in the magical forest. Twice a month — two weeks before and after Full Moon. International headliners, multiple stages, laser shows.",facs:["Multiple Stages","Laser Shows","International DJs","Forest Setting","Bar & Food"],ig:"@halfmoonfestival",web:"https://halfmoonfestival.com",maps:"Halfmoon+Festival+Koh+Phangan"},
+    {name:"Samsara Beach Club",area:"Haad Chao Phao",type:"party",desc:"Beachfront club on beautiful Haad Chao Phao. Regular sunset sessions, DJ nights and pool parties with stunning bay views.",facs:["Beachfront","Pool","Sunset Views","DJ Nights","Full Bar"],ig:"@samsarabeachclub",web:null,maps:"Samsara+Beach+Club+Koh+Phangan"},
+    {name:"Sabaii Bay Beach Club",area:"Ban Tai",type:"party",desc:"Vibrant beach club on Ban Tai with regular music events, sunset parties and international DJs. Great cocktails on the sand.",facs:["Beachfront","Cocktail Bar","Sunset Sessions","DJ Events"],ig:"@sabaiibaykohphangan",web:null,maps:"Sabaii+Bay+Beach+Club+Koh+Phangan"},
+    {name:"Nashe Mesto",area:"Sri Thanu",type:"party",desc:"Popular spot in the Sri Thanu area known for its relaxed vibe and regular music events. Community favourite for good times.",facs:["Music Events","Bar","Community Vibe"],ig:null,web:null,maps:"Nashe+Mesto+Koh+Phangan"},
+    {name:"Space Club",area:"Haad Rin",type:"party",desc:"Iconic Haad Rin nightclub with legendary nights. One of the original Full Moon Party venues on the island.",facs:["Dance Floor","Bar","Haad Rin","Full Moon"],ig:null,web:null,maps:"Space+Club+Haad+Rin+Koh+Phangan"},
+    {name:"OXA Party",area:"Ban Tai",type:"party",desc:"Alternative underground events and art-focused parties. Known for unique lineups and immersive experiences.",facs:["Underground","Art Events","Alternative","Unique Lineups"],ig:"@oxapartykohphangan",web:null,maps:"OXA+Party+Koh+Phangan"},
+  ],
+  wellness:[
+    {name:"AUM Sound Healing",area:"Sri Thanu",type:"wellness",desc:"Daily: morning yoga & chanting (donation), Kundalini (300 THB), gong sessions (500–600 THB). Sauna & Ice Bath daily 17:00–23:00 (300 THB). Ecstatic Dance every Friday with bonfire. AUM DAY every Thursday.",facs:["Dry Sauna","Steam Sauna","Ice Bath (300฿)","Private Sauna","Gong Bath","Bonfire","Tea Ceremony"],ig:"@aumsoundcenter",web:"https://aumphangan.com",maps:"AUM+Sound+Healing+Center+Koh+Phangan"},
+    {name:"Orion Healing Centre",area:"Srithanu Bay",type:"wellness",desc:"Holistic healing, detox & yoga on crystal quartz hillside above Srithanu Bay. 10+ years. Herbal steam room, ice bath, colonic therapy, Reiki, 3 yoga shalas. Award-winning beachfront vegan cafe.",facs:["Herbal Steam Room","Ice Bath","3 Yoga Shalas","Vegan Cafe","Reiki","Colonic Therapy"],ig:"@orionhealingcentre",web:"https://orionhealing.com",maps:"Orion+Healing+Centre+Sri+Thanu+Koh+Phangan"},
+    {name:"Samma Karuna",area:"Haad Chao Phao",type:"wellness",desc:"International school of awakening & healing. Ocean-view bamboo campus. Daily yoga, tantra, breathwork, bio-development teacher training. 10+ years.",facs:["Ocean View Shala","Tantra Studio","Breathwork Room","Cacao Temple","Bamboo Campus"],ig:"@sammakaruna",web:"https://sammakaruna.org",maps:"Samma+Karuna+Haad+Chao+Phao+Koh+Phangan"},
+    {name:"Seeds of Dreams",area:"Haad Yao",type:"wellness",desc:"Cacao ceremonies & plant medicine in the Cacao Temple. Sacred fire circle, moon lodge & spring water source. Intimate and sacred.",facs:["Cacao Temple","Sacred Fire Circle","Medicine Garden","Moon Lodge","Spring Water"],ig:"@seedsofdreams",web:null,maps:"Seeds+of+Dreams+Haad+Yao+Koh+Phangan"},
+    {name:"Pyramid Yoga Center",area:"Sri Thanu",type:"practices",desc:"Traditional Ashtanga school in an iconic pyramid shala. Mysore programme, Yin yoga, sound baths. Herb garden, yoga library, purified water.",facs:["Pyramid Shala","Mysore Room","Herb Garden","Yoga Library"],ig:"@pyramidyogakohphangan",web:null,maps:"Pyramid+Yoga+Center+Sri+Thanu+Koh+Phangan"},
+    {name:"Agama Yoga",area:"Mae Haad",type:"practices",desc:"The world's largest residential yoga school since 2004. Hatha & Tantric yoga, meditation, spiritual philosophy. 1-month intensive courses and daily drop-in classes.",facs:["Multiple Shalas","Residential","Teacher Training","Daily Drop-In"],ig:"@agamayogakohphangan",web:"https://agamayoga.com",maps:"Agama+Yoga+Mae+Haad+Koh+Phangan"},
+    {name:"The Sanctuary Thailand",area:"Haad Tien (boat access only)",type:"wellness",desc:"Remote wellness resort, boat access only. Detox, yoga, fasting, colonic therapy. One of Asia's original retreat centres since the 1990s.",facs:["Colonic Therapy","Fasting Programs","Yoga Shala","Massage","Boat Access"],ig:"@thesanctuarythailand",web:"https://thesanctuarythailand.com",maps:"The+Sanctuary+Haad+Tien+Koh+Phangan"},
+    {name:"Ananda Yoga & Detox",area:"Sri Thanu",type:"wellness",desc:"Dedicated yoga & detox in Sri Thanu wellness hub. Iyengar & multi-style yoga, detox programs, sauna & spa.",facs:["Yoga Shala","Sauna","Detox Programs","Spa","Pool"],ig:"@anandayogadetox",web:null,maps:"Ananda+Yoga+Detox+Sri+Thanu+Koh+Phangan"},
+    {name:"Siam Healing Centre",area:"Sri Thanu",type:"wellness",desc:"Holistic healing hub in the heart of Sri Thanu. Yoga, meditation, sound healing, massage and energy work. Popular daily schedule.",facs:["Yoga Classes","Meditation","Sound Healing","Massage","Energy Work"],ig:"@siamhealingcentre",web:null,maps:"Siam+Healing+Centre+Koh+Phangan"},
+    {name:"ARCANA Wellness Village",area:"Sri Thanu",type:"wellness",desc:"Modern wellness village with yoga shalas, healing spaces and community events. Regular workshops, retreats and daily classes.",facs:["Yoga Shala","Healing Rooms","Community Events","Workshops","Cafe"],ig:"@arcanaphangan",web:null,maps:"ARCANA+Wellness+Village+Koh+Phangan"},
+    {name:"Dragon Soul Retreat",area:"Ban Tai",type:"wellness",desc:"Intimate retreat center offering transformational programs, breathwork, cacao ceremonies and spiritual workshops in a jungle setting.",facs:["Breathwork","Cacao Ceremonies","Jungle Setting","Workshops","Retreats"],ig:"@dragonsoultretreat",web:null,maps:"Dragon+Soul+Retreat+Koh+Phangan"},
+    {name:"Indriya Retreat",area:"Sri Thanu",type:"wellness",desc:"Boutique wellness retreat offering personalized healing programs, yoga, meditation and bodywork in a serene natural setting.",facs:["Yoga","Meditation","Bodywork","Personalized Programs","Garden"],ig:"@indriyaretreat",web:null,maps:"Indriya+Retreat+Koh+Phangan"},
+    {name:"Soulscape",area:"Sri Thanu",type:"wellness",desc:"Creative healing and yoga space hosting workshops, ecstatic dance, sound healing and movement classes. Vibrant community hub.",facs:["Yoga Classes","Ecstatic Dance","Sound Healing","Workshops","Community"],ig:"@soulscapephangan",web:null,maps:"Soulscape+Koh+Phangan"},
+    {name:"New Earth",area:"Sri Thanu",type:"wellness",desc:"Conscious living center with daily yoga, meditation, cacao ceremonies and community gatherings. Peaceful garden setting.",facs:["Daily Yoga","Meditation","Cacao","Community","Garden"],ig:"@newearthphangan",web:null,maps:"New+Earth+Koh+Phangan"},
+    {name:"ETHOS Cafe & Shala",area:"Sri Thanu",type:"practices",desc:"Yoga shala and conscious cafe in one. Morning yoga classes, healthy food, great coffee and a welcoming community atmosphere.",facs:["Yoga Shala","Cafe","Healthy Food","Morning Classes","Community"],ig:"@ethosphangan",web:null,maps:"ETHOS+Cafe+Shala+Koh+Phangan"},
+    {name:"V Yoga Shala",area:"Sri Thanu",type:"practices",desc:"Dedicated yoga shala with a variety of daily classes. Vinyasa, Yin, Hatha and more in a beautiful open-air setting.",facs:["Daily Classes","Vinyasa","Yin","Hatha","Open-Air"],ig:"@vyogashala",web:null,maps:"V+Yoga+Shala+Koh+Phangan"},
+    {name:"Sati Yoga",area:"Sri Thanu",type:"practices",desc:"Mindful yoga studio with a focus on breath, presence and alignment. Regular classes for all levels in Sri Thanu.",facs:["All Levels","Mindful Yoga","Breath Work","Alignment","Daily Classes"],ig:"@satiyogaphangan",web:null,maps:"Sati+Yoga+Koh+Phangan"},
+    {name:"Xantiva",area:"Koh Phangan",type:"wellness",desc:"Unique wellness and movement space hosting a variety of events, workshops and healing sessions on the island.",facs:["Workshops","Movement","Healing","Events","Community"],ig:null,web:null,maps:"Xantiva+Koh+Phangan"},
+  ],
+  sport:[
+    {name:"Podium Gym",area:"Thong Sala",type:"sport",desc:"Premier fitness facility in Thong Sala. CrossFit, functional fitness, HYROX training and group classes. Top equipment and experienced coaches.",facs:["CrossFit","HYROX","Functional Fitness","Group Classes","Top Equipment"],ig:"@podiumgymkohphangan",web:null,maps:"Podium+Gym+Thong+Sala+Koh+Phangan"},
+    {name:"Haad Rin Arena",area:"Haad Rin",type:"sport",desc:"Multi-purpose sports arena in Haad Rin hosting Muay Thai fight nights, boxing events and other sports competitions.",facs:["Muay Thai","Boxing Ring","Fight Nights","Sports Events","Arena"],ig:null,web:null,maps:"Haad+Rin+Arena+Koh+Phangan"},
+    {name:"Chinnarach Muay Thai",area:"Koh Phangan",type:"sport",desc:"Authentic Muay Thai gym with experienced Thai trainers. Daily morning and evening classes for all levels. Traditional training methods.",facs:["Muay Thai","Thai Trainers","Daily Classes","All Levels","Traditional Training"],ig:"@chinnarachmuaythai",web:null,maps:"Chinnarach+Muay+Thai+Koh+Phangan"},
+    {name:"Ninja Camp",area:"Koh Phangan",type:"sport",desc:"Fun and challenging obstacle course and ninja training facility. Great for fitness, team events and adrenaline seekers of all ages.",facs:["Obstacle Course","Ninja Training","Team Events","All Ages","Fun Fitness"],ig:"@ninjacamp.kohphangan",web:null,maps:"Ninja+Camp+Koh+Phangan"},
+  ],
+  restaurant:[
+    {name:"Fisherman's Restaurant",area:"Ban Tai beachfront",type:"restaurant",desc:"Koh Phangan's longtime TripAdvisor #1. Chef Lek's soft-shell crab in yellow curry, Thai-western fish cakes & fish pie. Dine on a modified long-tail boat.",facs:["Beachfront","Seafood Specialist","Long-Tail Boat Dining","Full Bar"],ig:null,web:null,maps:"Fisherman+Restaurant+Ban+Tai+Koh+Phangan"},
+    {name:"Orion Cafe",area:"Srithanu Bay",type:"restaurant",desc:"Award-winning beachfront vegan & raw food cafe. Plant-based Thai, smoothie bowls, fresh juices & superfoods. Gulf views. Praised internationally.",facs:["Vegan & Raw","Beachfront","Superfoods","Fresh Juices","Gulf Views"],ig:"@orionhealingcentre",web:"https://orionhealing.com",maps:"Orion+Cafe+Sri+Thanu+Koh+Phangan"},
+    {name:"Eat.co Srithanu",area:"Sri Thanu",type:"restaurant",desc:"Best vegan in Sri Thanu — thali, teriyaki, kimchi fried rice, coconut milk matcha latte. Comedy open mic every Wednesday. Community favourite.",facs:["Vegan","Comedy Wed","Community Hub","Wifi"],ig:"@eat.co.srithanu",web:null,maps:"Eat.co+Srithanu+Koh+Phangan"},
+    {name:"Shalimar Restaurant",area:"Sri Thanu",type:"restaurant",desc:"Healthy Middle Eastern & international — sabich, pitas, Israeli salads, Moroccan stews. Rare meat-serving spot in the wellness hub. Over half menu vegan.",facs:["Middle Eastern","Vegan Options","Meat Available","Outdoor"],ig:"@shalimar.phangan",web:null,maps:"Shalimar+Restaurant+Sri+Thanu+Koh+Phangan"},
+    {name:"Infinity Beach Club",area:"Ban Tai",type:"restaurant",desc:"Stylish beachfront dining with sushi, poolside lounging & nightly events. Modern international meets Thai seafood.",facs:["Beachfront Pool","Sushi","International Menu","Nightly Events"],ig:"@infinitybeachclub.kph",web:"https://www.infinitybeachclub.com",maps:"Infinity+Beach+Club+Ban+Tai+Koh+Phangan"},
+    {name:"Tiki Beach",area:"Ban Tai beachfront",type:"restaurant",desc:"Beachfront resort, restaurant & co-working space. Full Thai & international menu with smoothie bowls and fresh coffee.",facs:["Beachfront","Co-Working","Smoothie Bowls","Coffee","Wifi"],ig:"@tikibeach.kohphangan",web:"https://tikibeachkohphangan.com",maps:"Tiki+Beach+Koh+Phangan"},
+    {name:"PRAYA Sunset Restaurant",area:"Ban Tai",type:"restaurant",desc:"Elevated sunset dining experience with panoramic sea views. International cuisine, craft cocktails and one of the best sunset spots on the island.",facs:["Sunset Views","International Menu","Craft Cocktails","Panoramic View"],ig:"@prayaphangan",web:null,maps:"PRAYA+Sunset+Restaurant+Koh+Phangan"},
+    {name:"Sushi Love",area:"Thong Sala",type:"restaurant",desc:"Best sushi on the island. Fresh fish, creative rolls and Japanese classics. Popular with locals and expats alike.",facs:["Sushi","Fresh Fish","Japanese","Takeaway"],ig:"@sushilovephangan",web:null,maps:"Sushi+Love+Thong+Sala+Koh+Phangan"},
+    {name:"Polly's Kitchen",area:"Sri Thanu",type:"restaurant",desc:"Beloved community kitchen serving wholesome meals, healthy bowls and comfort food. Cozy atmosphere and friendly staff.",facs:["Healthy Food","Community","Cozy","Wholesome Meals"],ig:"@pollyskitchenphangan",web:null,maps:"Pollys+Kitchen+Koh+Phangan"},
+    {name:"KHAIMA Cafe",area:"Sri Thanu",type:"restaurant",desc:"Middle Eastern inspired cafe with shakshuka, hummus, fresh juices and specialty coffee. A Sri Thanu favourite.",facs:["Middle Eastern","Specialty Coffee","Fresh Juices","Outdoor Seating"],ig:"@khaimacafe",web:null,maps:"KHAIMA+Cafe+Koh+Phangan"},
+    {name:"Nashe Mesto",area:"Sri Thanu",type:"restaurant",desc:"Popular community spot in Sri Thanu with good food, great vibes and regular events. A local favourite.",facs:["Community Vibe","Events","Bar","Food"],ig:null,web:null,maps:"Nashe+Mesto+Koh+Phangan"},
+  ]
+};
+
+
+
+
+
+function buildVCard(v){
+  const catColors={music:'var(--music)',party:'var(--party)',practices:'var(--practices)',movement:'var(--movement)',sport:'var(--sport)',workshop:'var(--workshop)',festival:'var(--festival)',restaurant:'var(--restaurant)'};
+  const col=catColors[v.type]||catColors.practices;
+  const area=v.area.split('(')[0].split(',')[0].trim();
+  const safe=v.name.replace(/'/g,"\'");
+  return `<div class="vcard" onclick="openVenue('${safe}')">
+    <div class="vcat-dot" style="background:${col}"></div>
+    <div class="vcard-info">
+      <div class="vname">${v.name}</div>
+      <div class="varea">📍 ${area}</div>
+      <div class="vfacs">${v.facs.slice(0,3).map(f=>`<span class="vfac">${f}</span>`).join('')}</div>
+    </div>
+    <svg class="vcard-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+  </div>`;
+}
+
+function renderVenues(q=''){
+  const ql=q.toLowerCase();
+  const flt=v=>!ql||v.name.toLowerCase().includes(ql)||v.area.toLowerCase().includes(ql)||v.facs.some(f=>f.toLowerCase().includes(ql));
+  const pV=VENUES.party.filter(flt),wV=VENUES.wellness.filter(flt),sV=(VENUES.sport||[]).filter(flt),rV=VENUES.restaurant.filter(flt);
+  const sec=(key,arr,icon)=>{
+    if(!arr.length) return '';
+    const id='vsec-'+key;
+    return `<div class="vsec-hdr" onclick="toggleSec('${id}')">
+      <span class="vsec-t">${icon} ${i(key)}</span>
+      <span class="vsec-c">${arr.length} <svg class="vsec-arr" id="${id}-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+    </div>
+    <div class="vsec-body" id="${id}" style="max-height:2000px">
+      <div class="vlist">${arr.map(v=>buildVCard(v)).join('')}</div>
+    </div>`;
+  };
+  document.getElementById('vc').innerHTML=(sec('party-venues',pV,'🎉')+sec('wellness-venues',wV,'🌿')+sec('sport-venues',sV,'🔴')+sec('restaurant-venues',rV,'🍽️')||'<div class="empty">No venues found</div>')+'<div style="height:80px"></div>';
+
+}
+function toggleSec(id){
+  const body=document.getElementById(id);
+  const arr=document.getElementById(id+'-arr');
+  if(!body)return;
+  const collapsed=body.classList.toggle('collapsed');
+  if(arr) arr.style.transform=collapsed?'rotate(-90deg)':'rotate(0deg)';
+}
+function searchV(q){renderVenues(q);}
+
+function openVenue(name){
+  const allV=[...VENUES.party,...VENUES.wellness,...VENUES.restaurant];
+  const v=allV.find(x=>x.name===name);
+  if(!v)return;
+  const grad=CAT_GRAD[v.type]||CAT_GRAD.party;
+  const links=[];
+  if(v.web)links.push(`<a href="${v.web}" target="_blank" rel="noopener" class="vlink"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 014-10z"/></svg>Website</a>`);
+  if(v.ig)links.push(`<a href="https://instagram.com/${v.ig.replace('@','')}" target="_blank" rel="noopener" class="vlink" style="color:#E1306C;border-color:rgba(225,48,108,.2)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>${v.ig}</a>`);
+  if(v.maps)links.push(`<button class="vlink" onclick="openMaps('${v.maps}')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>${i('directions')}</button>`);
+  const photoUrl=getPhotoUrl(v.name);
+  const heroHtml=photoUrl
+    ?`<div class="vmodal-photo" style="background:#000"><img src="${photoUrl}" alt="${v.name}" style="width:100%;height:100%;object-fit:cover;opacity:.85" onerror="this.style.display='none'"><div class="vmodal-ov"></div><div class="vmodal-title"><div class="vmodal-badge">${v.type} · ${v.area.split('(')[0].split(',')[0].trim()}</div><div class="vmodal-name">${v.name}</div></div></div>`
+    :`<div class="vmodal-photo" style="background:${grad}"><div class="vmodal-ov"></div><div class="vmodal-title"><div class="vmodal-badge">${v.type} · ${v.area.split('(')[0].split(',')[0].trim()}</div><div class="vmodal-name">${v.name}</div></div></div>`;
+  document.getElementById('vm-content').innerHTML=`
+    ${heroHtml}
+    <div class="vmodal-body">
+      <div class="vmodal-area"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>${v.area}</div>
+      <p class="vmodal-desc">${v.desc}</p>
+      <div class="vmodal-facs">${v.facs.map(f=>`<span class="vfac2">${f}</span>`).join('')}</div>
+      <div class="vmodal-links">${links.join('')}</div>
+    </div><div style="height:20px"></div>`;
+  document.getElementById('venue-modal').classList.add('open');
+}
+
+// ══════════════════════════════════════════════════════
+// FALLBACK DATA
+// ══════════════════════════════════════════════════════
+const FALLBACK_TODAY=[
+  {id:1,title:"AUM DAY — Live Music & Chanting Meditation",venue:"AUM Sound Healing Center",area:"Sri Thanu",cat:"wellness",startTime:"18:00",endTime:"23:00",endsNextDay:false,price:"600 THB",donation:false,desc:"An evening of live music, community, and sacred sound. Full program: music jams, AUM chanting, gong sound healing, tea ceremony, sauna & ice bath, bonfire. Live set by Baba Rebelution, harp meditation by Anneya.",lineup:["Baba Rebelution","AUM Orchestra","Anneya (Harp)"],ticketUrl:"https://phangan.events/events/aum-day-with-aum-chanting-meditation-thursday/",imageUrl:null,mapsQ:"AUM+Sound+Healing+Center+Koh+Phangan"},
+  {id:2,title:"SOLAR Conexion — The Island Vibes",venue:"SEASIDE Sunset Bar",area:"Ban Tai Beach",cat:"party",startTime:"17:00",endTime:"05:00",endsNextDay:true,price:"400–600 THB",donation:false,desc:"Special beach edition: RAM (The Hole Beirut) makes his Koh Phangan debut. NO:MAD live with percussion & didgeridoo. Fire shows, dancers, laser visuals, hi-end sound, art market & covered dancefloor. Free entry before 21:00 (ladies before 22:00).",lineup:["RAM","NO:MAD (live perc + didgeridoo)","TINO MORENO","DAVA DI TOMA","KATYAGUR","ATMAN ANANDA"],ticketUrl:"https://phangan.events/events/solar-conexion-the-island-vibes/",imageUrl:null,mapsQ:"SEASIDE+Sunset+Bar+Ban+Tai+Koh+Phangan"},
+  {id:3,title:"Rays of Sunshine",venue:"STONA Jungle Club",area:"Ban Tai Jungle",cat:"festival",startTime:"21:00",endTime:"06:00",endsNextDay:true,price:"1400 THB",donation:false,desc:"Transcendent sonic journey at one of the island's most captivating jungle locations. Seamless blend of melodic energy and driving rhythms through till 6am.",lineup:["Asia 2001 (by Florian)","Mi Ka El","Stavi","Yotam","Waqt","Chakra Bloom"],ticketUrl:"https://phangan.events/",imageUrl:null,mapsQ:"STONA+Jungle+Club+Ban+Tai+Koh+Phangan"},
+  {id:4,title:"Ecstatic Dance — Friday Fire Circle",venue:"AUM Sound Healing Center",area:"Sri Thanu",cat:"ecstatic",startTime:"19:00",endTime:"22:00",endsNextDay:false,price:null,donation:true,desc:"Every Friday — massive bonfire, free movement, no talking on the dancefloor. Drug, alcohol & smoke-free sacred space. Cacao, kombucha & healthy food. One of the island's most loved weekly rituals.",lineup:[],ticketUrl:null,imageUrl:null,mapsQ:"AUM+Sound+Healing+Center+Koh+Phangan"},
+  {id:5,title:"Morning Yoga & Sound Healing",venue:"Orion Healing Centre",area:"Srithanu Bay",cat:"yoga",startTime:"08:00",endTime:"09:30",endsNextDay:false,price:null,donation:true,desc:"Daily yoga at Orion's beachfront shala above Srithanu Bay. Hatha, Vinyasa & Restorative styles. Herbal steam room & ice bath available. Award-winning vegan cafe on site.",lineup:[],ticketUrl:null,imageUrl:null,mapsQ:"Orion+Healing+Centre+Sri+Thanu+Koh+Phangan"},
+  {id:6,title:"Cacao Ceremony & Crystal Sound Journey",venue:"Seeds of Dreams",area:"Haad Yao",cat:"wellness",startTime:"19:00",endTime:"22:00",endsNextDay:false,price:null,donation:true,desc:"Heart-opening ceremonial cacao followed by a deep crystal bowl & live sound journey in the Cacao Temple. Medicine garden, moon lodge & spring water source on site.",lineup:[],ticketUrl:null,imageUrl:null,mapsQ:"Seeds+of+Dreams+Haad+Yao+Koh+Phangan"},
+  {id:7,title:"PsyDay — Free Entry Every Thursday",venue:"Chill Up Club",area:"Ban Tai Main Road",cat:"party",startTime:"21:00",endTime:"05:00",endsNextDay:true,price:null,donation:false,desc:"'Journey into the mystical realms of psychedelic soundscapes.' Led by Jo Moontribe & Friends. Free entry all night — PSYDAY is more than just a party, it's a spiritual journey through sound.",lineup:["Jo Moontribe & Friends"],ticketUrl:null,imageUrl:null,mapsQ:"Chill+Up+Club+Ban+Tai+Koh+Phangan"},
+  {id:8,title:"Gong Bath & Breathwork",venue:"Samma Karuna",area:"Haad Chao Phao",cat:"wellness",startTime:"19:30",endTime:"21:00",endsNextDay:false,price:null,donation:true,desc:"School of awakening 100m from FamilyMart Haad Chao Phao. Ocean-view bamboo campus. Daily yoga, tantra, breathwork, cacao ceremonies & bio-development dance therapy.",lineup:[],ticketUrl:null,imageUrl:null,mapsQ:"Samma+Karuna+Haad+Chao+Phao+Koh+Phangan"},
+];
+const FALLBACK_TMRW=[
+  {id:10,title:"Equinox Awakening — 8th Edition",venue:"Retro Mountain",area:"Hilltop jungle",cat:"festival",startTime:"20:00",endTime:"05:00",endsNextDay:true,price:"800 THB",donation:false,desc:"The balance of light and darkness returns. Join the 8th edition of Equinox Awakening where music, nature & community celebrate this powerful seasonal shift. From 8pm at the magical heights of Retro Mountain, surrounded by jungle energy.",lineup:[],ticketUrl:"https://phangan.events/",imageUrl:null,mapsQ:"Retro+Mountain+Koh+Phangan"},
+  {id:11,title:"Lighthouse Friday Night Party",venue:"Lighthouse Bungalows",area:"Leela Beach",cat:"party",startTime:"18:00",endTime:"06:00",endsNextDay:true,price:null,donation:false,desc:"Dance across the wooden bridge over the sea for an iconic sunset-to-sunrise session. World-class melodic house & techno at the end of Leela Beach. Free entry before 9pm.",lineup:["Stil & Bense","David Chong","Peter G","Acrobat"],ticketUrl:"https://phangan.events/",imageUrl:null,mapsQ:"Lighthouse+Bungalows+Leela+Beach+Koh+Phangan"},
+  {id:12,title:"Bluerama Saturday Sunset Pool Party",venue:"Bluerama",area:"Hilltop, Ban Tai",cat:"party",startTime:"15:00",endTime:"22:00",endsNextDay:false,price:"300 THB",donation:false,desc:"Elevate your weekend at this hilltop infinity pool session featuring panoramic ocean views and a curated soundtrack of house music as the sun sets.",lineup:[],ticketUrl:"https://phangan.events/",imageUrl:null,mapsQ:"Bluerama+Koh+Phangan"},
+  {id:13,title:"Ashtanga Primary Series — Mysore",venue:"Pyramid Yoga Center",area:"Sri Thanu",cat:"yoga",startTime:"08:00",endTime:"10:00",endsNextDay:false,price:"350 THB",donation:false,desc:"Traditional Mysore-style Ashtanga in the iconic pyramid shala. Open to all levels. Herb garden, yoga library & purified water on site.",lineup:[],ticketUrl:null,imageUrl:null,mapsQ:"Pyramid+Yoga+Center+Sri+Thanu+Koh+Phangan"},
+  {id:14,title:"Innerdance Healing Session",venue:"Samma Karuna",area:"Haad Chao Phao",cat:"ecstatic",startTime:"18:00",endTime:"20:30",endsNextDay:false,price:null,donation:true,desc:"Music-guided inner journey & energy healing at the school of awakening. Body-based therapy and conscious dance with ocean views.",lineup:[],ticketUrl:null,imageUrl:null,mapsQ:"Samma+Karuna+Koh+Phangan"},
+  {id:15,title:"Bambu Huts Sunday Session",venue:"Bambu Huts",area:"Haad Yuan",cat:"party",startTime:"12:00",endTime:"02:00",endsNextDay:true,price:"500 THB",donation:false,desc:"The island's most beloved weekly ritual — day into night at turquoise water & granite boulders. The holy day of dance. 200 THB before 2pm. Taxi boats from Haad Rin Pier.",lineup:[],ticketUrl:"https://phangan.events/",imageUrl:null,mapsQ:"Bambu+Huts+Haad+Yuan+Koh+Phangan"},
+  {id:16,title:"Eden Garden Party",venue:"Eden Garden",area:"Haad Yuan",cat:"party",startTime:"20:00",endTime:"12:00",endsNextDay:true,price:null,donation:false,desc:"Saturday night–Sunday morning legend at secluded Haad Yuan. Deep house, disco & minimal techno in the jungle. NO VIDEOS. NO DRONES. NO SHOES. Always free entry. Taxi boats from Haad Rin.",lineup:[],ticketUrl:null,imageUrl:null,mapsQ:"Eden+Garden+Haad+Yuan+Koh+Phangan"},
+];
+
+// ══════════════════════════════════════════════════════
+// TABS & UTILS
+// ══════════════════════════════════════════════════════
+function showTab(tab){
+  document.querySelectorAll('.tab-page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.bnt').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.querySelector('[data-tab="'+tab+'"]').classList.add('active');
+}
+function closeOv(id,e){if(e.target===document.getElementById(id))document.getElementById(id).classList.remove('open');}
+function openWx(){updateMoon();document.getElementById('wx-modal').classList.add('open');}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
+function openMaps(q){window.open('https://maps.google.com/maps?q='+q);}
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',()=>{
+  applyTheme();
+  allEvs.today = FALLBACK_TODAY;
+  allEvs.tomorrow = FALLBACK_TMRW;
+  setLang(lang);
+  renderVenues();
+  updateMoon();
+  updateFavBadge();
+  // Map nearby
+  const near=[...VENUES.party.slice(0,3),...VENUES.wellness.slice(0,3)];
+  document.getElementById('map-v').innerHTML='<div class="vlist">'+near.map(v=>buildVCard(v)).join('')+'</div><div style="height:80px"></div>';
+  // Fetch live data
+  fetchEvents();
+  // Fetch real weather from Open-Meteo
+  fetchWeather();
+  // Load venue photos from Railway
+  loadAllVenuePhotos();
+  // Periodic refresh: events every 30min (handled by setInterval above), weather every 10min
+  setInterval(()=>{renderEvents();updateMoon();updateCD();},60000);
+  setInterval(fetchWeather, 10*60*1000);
+});
+</script>
+</body>
+</html>
