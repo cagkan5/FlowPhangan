@@ -307,14 +307,14 @@ main{max-width:680px;margin:0 auto}
       <button class="dchip" onclick="setDay('tomorrow',this)" data-i18n="tomorrow">Tomorrow</button>
     </div>
     <div class="filter-row">
-      <button class="fchip fchip-all active" onclick="setCat('all',this)">All</button>
-      <button class="fchip fchip-music" onclick="setCat('music',this)"><span class="fdot fdot-music"></span>Music</button>
-      <button class="fchip fchip-party" onclick="setCat('party',this)"><span class="fdot fdot-party"></span>Party</button>
-      <button class="fchip fchip-practices" onclick="setCat('practices',this)"><span class="fdot fdot-practices"></span>Practices</button>
-      <button class="fchip fchip-movement" onclick="setCat('movement',this)"><span class="fdot fdot-movement"></span>Movement</button>
-      <button class="fchip fchip-sport" onclick="setCat('sport',this)"><span class="fdot fdot-sport"></span>Sport</button>
-      <button class="fchip fchip-workshop" onclick="setCat('workshop',this)"><span class="fdot fdot-workshop"></span>Workshop</button>
-      <button class="fchip fchip-festival" onclick="setCat('festival',this)"><span class="fdot fdot-festival"></span>Festival</button>
+      <button class="fchip fchip-all active" onclick="setCat('all',this)" data-i18n="all">All</button>
+      <button class="fchip fchip-music" onclick="setCat('music',this)"><span class="fdot fdot-music"></span><span data-i18n="fmusic">Music</span></button>
+      <button class="fchip fchip-party" onclick="setCat('party',this)"><span class="fdot fdot-party"></span><span data-i18n="fparty">Party</span></button>
+      <button class="fchip fchip-practices" onclick="setCat('practices',this)"><span class="fdot fdot-practices"></span><span data-i18n="fpractices">Practices</span></button>
+      <button class="fchip fchip-movement" onclick="setCat('movement',this)"><span class="fdot fdot-movement"></span><span data-i18n="fmovement">Movement</span></button>
+      <button class="fchip fchip-sport" onclick="setCat('sport',this)"><span class="fdot fdot-sport"></span><span data-i18n="fsport">Sport</span></button>
+      <button class="fchip fchip-workshop" onclick="setCat('workshop',this)"><span class="fdot fdot-workshop"></span><span data-i18n="fworkshop">Workshop</span></button>
+      <button class="fchip fchip-festival" onclick="setCat('festival',this)"><span class="fdot fdot-festival"></span><span data-i18n="ffestival">Festival</span></button>
     </div>
   </div>
   <div class="live-banner" onclick="showLive()">
@@ -325,24 +325,24 @@ main{max-width:680px;margin:0 auto}
   <!-- PWA Install Bar -->
   <div class="pwa-bar" id="pwa-bar" style="display:none">
     <div style="font-size:1.2rem">📲</div>
-    <div class="pwa-bar-txt"><div class="pwa-bar-ttl">Add to Home Screen</div>One tap away from the island vibes</div>
+    <div class="pwa-bar-txt"><div class="pwa-bar-ttl" data-i18n="pwa-title">Add to Home Screen</div><span data-i18n="pwa-sub">One tap away from the island vibes</span></div>
     <button class="pwa-install-btn" onclick="installPWA()">Install</button>
     <button class="pwa-close" onclick="document.getElementById('pwa-bar').style.display='none'">×</button>
   </div>
   <!-- Event Search -->
   <div class="ev-search">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity=".35"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input type="text" placeholder="Search events, venues, artists…" id="ev-search-input" oninput="searchEvents(this.value)">
+    <input type="text" placeholder="Search events, venues, artists…" id="ev-search-input" data-i18n-placeholder="search-events" oninput="searchEvents(this.value)">
   </div>
   <div class="ai-bar" id="ai-bar">
     <div class="spinner" id="ai-spin"></div>
-    <span class="ai-msg" id="ai-msg">Loading live events…</span>
+    <span class="ai-msg" id="ai-msg" data-i18n="loading-events">Loading live events…</span>
   </div>
   <div class="slbl"><span id="ev-lbl">Today's Events</span><span class="scount" id="ev-cnt"></span></div>
   <div class="elist" id="ev-list">
     <div style="text-align:center;padding:50px 20px;color:var(--text3);font-size:.82rem">
       <div class="spinner" style="margin:0 auto 14px;width:22px;height:22px"></div>
-      Loading events from phangan.events…
+      <span data-i18n="loading-events">Loading live events…</span>
     </div>
   </div>
 </div>
@@ -351,7 +351,7 @@ main{max-width:680px;margin:0 auto}
 <div class="tab-page" id="tab-venues">
   <div class="sbar">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".3"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input type="text" placeholder="Search venues…" oninput="searchV(this.value)">
+    <input type="text" placeholder="Search venues…" data-i18n-placeholder="search-venues" oninput="searchV(this.value)">
   </div>
   <div id="vc"></div>
 </div>
@@ -380,7 +380,7 @@ main{max-width:680px;margin:0 auto}
   <button class="bnt" onclick="showTab('saved')" data-tab="saved" id="fav-tab-btn">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
     <span id="fav-tab-cnt" class="fav-badge">0</span>
-    <span>Saved</span>
+    <span data-i18n="saved">Saved</span>
   </button>
   <button class="bnt" onclick="showTab('map')" data-tab="map">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
@@ -391,8 +391,8 @@ main{max-width:680px;margin:0 auto}
 <!-- SAVED TAB -->
 <div class="tab-page" id="tab-saved">
   <div style="padding:14px 14px 8px;display:flex;align-items:center;justify-content:space-between">
-    <div style="font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)">❤️ Saved Events</div>
-    <button onclick="clearFavs()" style="font-size:.65rem;color:var(--text3);background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif">Clear all</button>
+    <div style="font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)"><span data-i18n="saved">Saved</span> ❤️</div>
+    <button onclick="clearFavs()" style="font-size:.65rem;color:var(--text3);background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif" data-i18n="clear-all">Clear all</button>
   </div>
   <div class="elist" id="fav-list"></div>
 </div>
@@ -411,7 +411,7 @@ main{max-width:680px;margin:0 auto}
       <div class="info-grid">
         <div class="info-cell"><div class="info-lbl" data-i18n="date">Date</div><div class="info-val" id="m-date"></div></div>
         <div class="info-cell"><div class="info-lbl" data-i18n="price">Price</div><div class="info-val" id="m-price"></div></div>
-        <div class="info-cell"><div class="info-lbl">Status</div><div class="info-val" id="m-status"></div></div>
+        <div class="info-cell"><div class="info-lbl" data-i18n="status">Status</div><div class="info-val" id="m-status"></div></div>
       </div>
       <p class="emodal-desc" id="m-desc"></p>
       <div class="lineup-section" id="m-lineup-sec">
@@ -419,9 +419,9 @@ main{max-width:680px;margin:0 auto}
         <div class="lineup-tags" id="m-lineup"></div>
       </div>
       <div class="modal-acts">
-        <button class="mact" onclick="toggleRemind()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          <span data-i18n="remind">Remind</span>
+        <button class="mact" onclick="toggleCalendar()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span data-i18n="add-calendar">Add to Calendar</span>
         </button>
         <button class="mact" onclick="toggleShare()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
@@ -432,12 +432,9 @@ main{max-width:680px;margin:0 auto}
           <span data-i18n="directions">Directions</span>
         </button>
       </div>
-      <div class="sub-acts" id="remind-panel">
-        <button class="sact" onclick="setR(30)">30 min</button>
-        <button class="sact" onclick="setR(60)">1 hour</button>
-        <button class="sact" onclick="setR(120)">2 hours</button>
-        <button class="sact" onclick="setR(240)">4 hours</button>
-        <button class="sact" onclick="setR(1440)">24 hours</button>
+      <div class="sub-acts" id="calendar-panel">
+        <a class="sact" id="cal-google" href="#" target="_blank" rel="noopener" data-i18n-prefix="📅 ">📅 Google</a>
+        <a class="sact" id="cal-apple" href="#" download="event.ics">🍎 Apple</a>
       </div>
       <div class="share-acts" id="share-panel">
         <button class="shbtn" onclick="shareWA()">
@@ -454,6 +451,7 @@ main{max-width:680px;margin:0 auto}
         </button>
       </div>
       <div id="m-ticket-wrap"></div>
+      <div id="m-details-wrap"></div>
     </div>
   </div>
 </div>
@@ -469,33 +467,33 @@ main{max-width:680px;margin:0 auto}
     <div class="mhandle"></div>
     <div style="padding:0 18px 14px;border-bottom:1px solid var(--border)">
       <div style="font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:5px">Koh Phangan</div>
-      <div style="font-family:Syne,sans-serif;font-size:1.3rem;color:var(--text)">Weather & Moon</div>
+      <div style="font-family:Syne,sans-serif;font-size:1.3rem;color:var(--text)" data-i18n="wx-moon">Weather & Moon</div>
     </div>
     <div style="padding:16px 18px">
       <div class="wx-grid">
-        <div class="wx-card"><div class="wx-live-badge"><span class="wx-live-dot"></span>LIVE</div><div class="wx-ico" id="wx-temp-ico">☀️</div><div class="wx-lbl">Temperature</div><div class="wx-val" id="wx-temp-val">—</div></div>
-        <div class="wx-card"><div class="wx-live-badge"><span class="wx-live-dot"></span>LIVE</div><div class="wx-ico">💧</div><div class="wx-lbl">Humidity</div><div class="wx-val" id="wx-hum-val">—</div></div>
-        <div class="wx-card"><div class="wx-live-badge"><span class="wx-live-dot"></span>LIVE</div><div class="wx-ico">🌅</div><div class="wx-lbl">Sunrise</div><div class="wx-val" id="wx-sunrise">—</div><div class="wx-sub" id="wx-sunrise-cd">—</div></div>
-        <div class="wx-card"><div class="wx-live-badge"><span class="wx-live-dot"></span>LIVE</div><div class="wx-ico">🌄</div><div class="wx-lbl">Sunset</div><div class="wx-val" id="wx-sunset">—</div><div class="wx-sub" id="wx-sunset-cd">—</div></div>
+        <div class="wx-card"><div class="wx-live-badge"><span class="wx-live-dot"></span>LIVE</div><div class="wx-ico" id="wx-temp-ico">☀️</div><div class="wx-lbl" data-i18n="temperature">Temperature</div><div class="wx-val" id="wx-temp-val">—</div></div>
+        <div class="wx-card"><div class="wx-live-badge"><span class="wx-live-dot"></span>LIVE</div><div class="wx-ico">💧</div><div class="wx-lbl" data-i18n="humidity">Humidity</div><div class="wx-val" id="wx-hum-val">—</div></div>
+        <div class="wx-card"><div class="wx-live-badge"><span class="wx-live-dot"></span>LIVE</div><div class="wx-ico">🌅</div><div class="wx-lbl" data-i18n="sunrise">Sunrise</div><div class="wx-val" id="wx-sunrise">—</div><div class="wx-sub" id="wx-sunrise-cd">—</div></div>
+        <div class="wx-card"><div class="wx-live-badge"><span class="wx-live-dot"></span>LIVE</div><div class="wx-ico">🌄</div><div class="wx-lbl" data-i18n="sunset">Sunset</div><div class="wx-val" id="wx-sunset">—</div><div class="wx-sub" id="wx-sunset-cd">—</div></div>
         <div class="wx-card">
           <div class="wx-ico" id="wx-moon-ico">🌔</div>
-          <div class="wx-lbl">Moon Phase</div>
+          <div class="wx-lbl" data-i18n="moon-phase">Moon Phase</div>
           <div class="wx-val" id="wx-moon-phase">—</div>
           <div class="wx-sub" id="wx-moon-ill">—</div>
         </div>
         <div class="wx-card">
           <div class="wx-ico">🌕</div>
-          <div class="wx-lbl">Full Moon in</div>
+          <div class="wx-lbl" data-i18n="full-moon-in">Full Moon in</div>
           <div class="wx-val" id="wx-fullmoon-cd">—</div>
           <div class="wx-sub" id="wx-fullmoon-date">—</div>
         </div>
         <div class="wx-card">
           <div class="wx-ico">🌙</div>
-          <div class="wx-lbl">Lunar Cycle</div>
+          <div class="wx-lbl" data-i18n="lunar-cycle">Lunar Cycle</div>
           <div class="wx-val" id="wx-lunar-day">Day —</div>
           <div class="wx-sub" id="wx-next-event">—</div>
         </div>
-        <div class="wx-card"><div class="wx-ico">💨</div><div class="wx-lbl">Wind</div><div class="wx-val" id="wx-wind-val">— km/h</div><div class="wx-sub" id="wx-wind-dir">—</div></div>
+        <div class="wx-card"><div class="wx-ico">💨</div><div class="wx-lbl" data-i18n="wind">Wind</div><div class="wx-val" id="wx-wind-val">— km/h</div><div class="wx-sub" id="wx-wind-dir">—</div></div>
       </div>
     </div>
   </div>
@@ -588,12 +586,12 @@ function updateCD(){
 // I18N — full multilingual with description translations
 // ══════════════════════════════════════════════════════
 const T = {
-  en:{events:"Events",venues:"Venues",map:"Map",today:"Today",tomorrow:"Tomorrow",all:"All",fparty:"Party",fwellness:"Wellness",fyoga:"Yoga",fecstatic:"Ecstatic","today-events":"Today's Events","tomorrow-events":"Tomorrow's Events",happening:"Happening now","party-venues":"Party Venues","sport-venues":"Sport & Fitness","wellness-venues":"Wellness & Healing","restaurant-venues":"Restaurants",date:"Date",price:"Price",lineup:"Line-up",remind:"Remind",share:"Share",directions:"Directions",login:"Login",signup:"Sign up","rn-title":"Happening right now",nearby:"Nearby Venues","map-coming":"Interactive map coming soon","get-ticket":"Get Tickets",donation:"Donation"},
-  tr:{events:"Etkinlikler",venues:"Mekanlar",map:"Harita",today:"Bugün",tomorrow:"Yarın",all:"Tümü",fparty:"Parti",fwellness:"Wellness",fyoga:"Yoga",fecstatic:"Ecstatic","today-events":"Bugünkü Etkinlikler","tomorrow-events":"Yarınki Etkinlikler",happening:"Şu an","party-venues":"Parti Mekanları","sport-venues":"Spor & Fitness","wellness-venues":"Sağlık & Şifa","restaurant-venues":"Restoranlar",date:"Tarih",price:"Fiyat",lineup:"Sanatçılar",remind:"Hatırlat",share:"Paylaş",directions:"Yol Tarifi",login:"Giriş",signup:"Kayıt","rn-title":"Şu an devam ediyor",nearby:"Yakın Mekanlar","map-coming":"Harita çok yakında","get-ticket":"Bilet Al",donation:"Bağış"},
-  fr:{events:"Événements",venues:"Lieux",map:"Carte",today:"Aujourd'hui",tomorrow:"Demain",all:"Tous",fparty:"Fête",fwellness:"Bien-être",fyoga:"Yoga",fecstatic:"Ecstatique","today-events":"Aujourd'hui","tomorrow-events":"Demain",happening:"En cours","party-venues":"Fêtes","sport-venues":"Sport","wellness-venues":"Bien-être","restaurant-venues":"Restaurants",date:"Date",price:"Prix",lineup:"Artistes",remind:"Rappel",share:"Partager",directions:"Itinéraire",login:"Connexion",signup:"S'inscrire","rn-title":"En ce moment",nearby:"À proximité","map-coming":"Carte bientôt","get-ticket":"Billets",donation:"Libre"},
-  es:{events:"Eventos",venues:"Lugares",map:"Mapa",today:"Hoy",tomorrow:"Mañana",all:"Todo",fparty:"Fiesta",fwellness:"Bienestar",fyoga:"Yoga",fecstatic:"Extático","today-events":"Hoy","tomorrow-events":"Mañana",happening:"Ahora","party-venues":"Fiestas","sport-venues":"Deporte","wellness-venues":"Bienestar","restaurant-venues":"Restaurantes",date:"Fecha",price:"Precio",lineup:"Artistas",remind:"Recordar",share:"Compartir",directions:"Cómo llegar",login:"Entrar",signup:"Registrarse","rn-title":"Ahora mismo",nearby:"Cerca","map-coming":"Mapa próximamente","get-ticket":"Entradas",donation:"Donación"},
-  ru:{events:"События",venues:"Площадки",map:"Карта",today:"Сегодня",tomorrow:"Завтра",all:"Все",fparty:"Вечеринка",fwellness:"Велнес",fyoga:"Йога",fecstatic:"Экстатик","today-events":"Сегодня","tomorrow-events":"Завтра",happening:"Сейчас","party-venues":"Вечеринки","sport-venues":"Спорт","wellness-venues":"Оздоровление","restaurant-venues":"Рестораны",date:"Дата",price:"Цена",lineup:"Артисты",remind:"Напомнить",share:"Поделиться",directions:"Маршрут",login:"Войти",signup:"Регистрация","rn-title":"Сейчас",nearby:"Рядом","map-coming":"Карта скоро","get-ticket":"Билеты",donation:"Донейшн"},
-  th:{events:"กิจกรรม",venues:"สถานที่",map:"แผนที่",today:"วันนี้",tomorrow:"พรุ่งนี้",all:"ทั้งหมด",fparty:"ปาร์ตี้",fwellness:"เวลเนส",fyoga:"โยคะ",fecstatic:"เอ็กซ์ตาติก","today-events":"กิจกรรมวันนี้","tomorrow-events":"พรุ่งนี้",happening:"ตอนนี้","party-venues":"ปาร์ตี้","sport-venues":"กีฬา","wellness-venues":"สุขภาพ","restaurant-venues":"ร้านอาหาร",date:"วันที่",price:"ราคา",lineup:"ศิลปิน",remind:"เตือน",share:"แชร์",directions:"เส้นทาง",login:"เข้าสู่ระบบ",signup:"สมัคร","rn-title":"กำลังเกิดขึ้น",nearby:"ใกล้เคียง","map-coming":"แผนที่เร็วๆนี้","get-ticket":"ซื้อบัตร",donation:"บริจาค"}
+  en:{events:"Events",venues:"Venues",map:"Map",today:"Today",tomorrow:"Tomorrow",all:"All",fmusic:"Music",fparty:"Party",fpractices:"Practices",fmovement:"Movement",fsport:"Sport",fworkshop:"Workshop",ffestival:"Festival",fwellness:"Wellness",fyoga:"Yoga",fecstatic:"Ecstatic","today-events":"Today's Events","tomorrow-events":"Tomorrow's Events",happening:"Happening now","party-venues":"Party & Music","sport-venues":"Sport & Fitness","wellness-venues":"Wellness & Practices","restaurant-venues":"Restaurants & Cafes",date:"Date",price:"Price",lineup:"Line-up",status:"Status",remind:"Remind",share:"Share",directions:"Directions",login:"Login",signup:"Sign up","rn-title":"Happening right now","starting-soon":"Starting soon","whats-on":"What's on today","next-up":"Next","check-tmrw":"Check Tomorrow","add-calendar":"Add to Calendar","view-details":"View Details",calendar:"Calendar","get-ticket":"Get Tickets",donation:"Donation",saved:"Saved","clear-all":"Clear all","no-events":"No events found","no-venues":"No venues found","search-events":"Search events, venues, artists…","search-venues":"Search venues…","loading-events":"Loading live events…","map-coming":"Interactive map coming soon",nearby:"Nearby Venues","pwa-title":"Add to Home Screen","pwa-sub":"One tap away from the island vibes",temperature:"Temperature",humidity:"Humidity",sunrise:"Sunrise",sunset:"Sunset","moon-phase":"Moon Phase","full-moon-in":"Full Moon in","lunar-cycle":"Lunar Cycle",wind:"Wind","wx-moon":"Weather & Moon",live:"LIVE",passed:"passed","in-time":"in"},
+  tr:{events:"Etkinlikler",venues:"Mekanlar",map:"Harita",today:"Bugün",tomorrow:"Yarın",all:"Tümü",fmusic:"Müzik",fparty:"Parti",fpractices:"Pratikler",fmovement:"Hareket",fsport:"Spor",fworkshop:"Atölye",ffestival:"Festival",fwellness:"Wellness",fyoga:"Yoga",fecstatic:"Ecstatic","today-events":"Bugünkü Etkinlikler","tomorrow-events":"Yarınki Etkinlikler",happening:"Şu an","party-venues":"Parti & Müzik","sport-venues":"Spor & Fitness","wellness-venues":"Wellness & Pratikler","restaurant-venues":"Restoranlar & Kafeler",date:"Tarih",price:"Fiyat",lineup:"Sanatçılar",status:"Durum",remind:"Hatırlat",share:"Paylaş",directions:"Yol Tarifi",login:"Giriş",signup:"Kayıt","rn-title":"Şu an devam ediyor","starting-soon":"Yakında başlıyor","whats-on":"Bugün ne var","next-up":"Sıradaki","check-tmrw":"Yarına bak","add-calendar":"Takvime Ekle","view-details":"Detaylar",calendar:"Takvim","get-ticket":"Bilet Al",donation:"Bağış",saved:"Kaydedilenler","clear-all":"Temizle","no-events":"Etkinlik bulunamadı","no-venues":"Mekan bulunamadı","search-events":"Etkinlik, mekan, sanatçı ara…","search-venues":"Mekan ara…","loading-events":"Canlı etkinlikler yükleniyor…","map-coming":"Harita çok yakında",nearby:"Yakın Mekanlar","pwa-title":"Ana Ekrana Ekle","pwa-sub":"Ada vibesına tek dokunuş",temperature:"Sıcaklık",humidity:"Nem",sunrise:"Gün Doğumu",sunset:"Gün Batımı","moon-phase":"Ay Fazı","full-moon-in":"Dolunaya Kalan","lunar-cycle":"Ay Döngüsü",wind:"Rüzgar","wx-moon":"Hava & Ay",live:"CANLI",passed:"geçti","in-time":"içinde"},
+  fr:{events:"Événements",venues:"Lieux",map:"Carte",today:"Aujourd'hui",tomorrow:"Demain",all:"Tous",fmusic:"Musique",fparty:"Fête",fpractices:"Pratiques",fmovement:"Mouvement",fsport:"Sport",fworkshop:"Atelier",ffestival:"Festival",fwellness:"Bien-être",fyoga:"Yoga",fecstatic:"Ecstatique","today-events":"Aujourd'hui","tomorrow-events":"Demain",happening:"En cours","party-venues":"Fête & Musique","sport-venues":"Sport & Fitness","wellness-venues":"Bien-être & Pratiques","restaurant-venues":"Restaurants & Cafés",date:"Date",price:"Prix",lineup:"Artistes",status:"Statut",remind:"Rappel",share:"Partager",directions:"Itinéraire",login:"Connexion",signup:"S'inscrire","rn-title":"En ce moment","starting-soon":"Bientôt","whats-on":"Programme du jour","next-up":"Prochain","check-tmrw":"Voir demain","add-calendar":"Ajouter au calendrier","view-details":"Voir détails",calendar:"Calendrier","get-ticket":"Billets",donation:"Libre",saved:"Sauvegardés","clear-all":"Tout effacer","no-events":"Aucun événement","no-venues":"Aucun lieu","search-events":"Chercher événements, lieux, artistes…","search-venues":"Chercher lieux…","loading-events":"Chargement…","map-coming":"Carte bientôt",nearby:"À proximité","pwa-title":"Ajouter à l'écran","pwa-sub":"À un tap des vibes de l'île",temperature:"Température",humidity:"Humidité",sunrise:"Lever du soleil",sunset:"Coucher du soleil","moon-phase":"Phase lunaire","full-moon-in":"Pleine lune dans","lunar-cycle":"Cycle lunaire",wind:"Vent","wx-moon":"Météo & Lune",live:"EN DIRECT",passed:"passé","in-time":"dans"},
+  es:{events:"Eventos",venues:"Lugares",map:"Mapa",today:"Hoy",tomorrow:"Mañana",all:"Todo",fmusic:"Música",fparty:"Fiesta",fpractices:"Prácticas",fmovement:"Movimiento",fsport:"Deporte",fworkshop:"Taller",ffestival:"Festival",fwellness:"Bienestar",fyoga:"Yoga",fecstatic:"Extático","today-events":"Hoy","tomorrow-events":"Mañana",happening:"Ahora","party-venues":"Fiesta & Música","sport-venues":"Deporte & Fitness","wellness-venues":"Bienestar & Prácticas","restaurant-venues":"Restaurantes & Cafés",date:"Fecha",price:"Precio",lineup:"Artistas",status:"Estado",remind:"Recordar",share:"Compartir",directions:"Cómo llegar",login:"Entrar",signup:"Registrarse","rn-title":"Ahora mismo","starting-soon":"Pronto","whats-on":"Qué hay hoy","next-up":"Siguiente","check-tmrw":"Ver mañana","add-calendar":"Añadir al calendario","view-details":"Ver detalles",calendar:"Calendario","get-ticket":"Entradas",donation:"Donación",saved:"Guardados","clear-all":"Borrar todo","no-events":"No hay eventos","no-venues":"No hay lugares","search-events":"Buscar eventos, lugares, artistas…","search-venues":"Buscar lugares…","loading-events":"Cargando…","map-coming":"Mapa próximamente",nearby:"Cerca","pwa-title":"Añadir a pantalla","pwa-sub":"A un toque de las vibras de la isla",temperature:"Temperatura",humidity:"Humedad",sunrise:"Amanecer",sunset:"Atardecer","moon-phase":"Fase lunar","full-moon-in":"Luna llena en","lunar-cycle":"Ciclo lunar",wind:"Viento","wx-moon":"Clima & Luna",live:"EN VIVO",passed:"pasado","in-time":"en"},
+  ru:{events:"События",venues:"Площадки",map:"Карта",today:"Сегодня",tomorrow:"Завтра",all:"Все",fmusic:"Музыка",fparty:"Вечеринка",fpractices:"Практики",fmovement:"Движение",fsport:"Спорт",fworkshop:"Мастерская",ffestival:"Фестиваль",fwellness:"Велнес",fyoga:"Йога",fecstatic:"Экстатик","today-events":"Сегодня","tomorrow-events":"Завтра",happening:"Сейчас","party-venues":"Вечеринки & Музыка","sport-venues":"Спорт & Фитнес","wellness-venues":"Оздоровление & Практики","restaurant-venues":"Рестораны & Кафе",date:"Дата",price:"Цена",lineup:"Артисты",status:"Статус",remind:"Напомнить",share:"Поделиться",directions:"Маршрут",login:"Войти",signup:"Регистрация","rn-title":"Сейчас","starting-soon":"Скоро начнётся","whats-on":"Что сегодня","next-up":"Следующее","check-tmrw":"На завтра","add-calendar":"В календарь","view-details":"Подробнее",calendar:"Календарь","get-ticket":"Билеты",donation:"Донейшн",saved:"Сохранённые","clear-all":"Очистить","no-events":"Нет событий","no-venues":"Нет площадок","search-events":"Поиск событий, мест, артистов…","search-venues":"Поиск мест…","loading-events":"Загрузка…","map-coming":"Карта скоро",nearby:"Рядом","pwa-title":"На главный экран","pwa-sub":"Один тап до атмосферы острова",temperature:"Температура",humidity:"Влажность",sunrise:"Рассвет",sunset:"Закат","moon-phase":"Фаза луны","full-moon-in":"До полнолуния","lunar-cycle":"Лунный цикл",wind:"Ветер","wx-moon":"Погода & Луна",live:"ПРЯМО СЕЙЧАС",passed:"прошло","in-time":"через"},
+  th:{events:"กิจกรรม",venues:"สถานที่",map:"แผนที่",today:"วันนี้",tomorrow:"พรุ่งนี้",all:"ทั้งหมด",fmusic:"ดนตรี",fparty:"ปาร์ตี้",fpractices:"การปฏิบัติ",fmovement:"การเคลื่อนไหว",fsport:"กีฬา",fworkshop:"เวิร์กช็อป",ffestival:"เทศกาล",fwellness:"เวลเนส",fyoga:"โยคะ",fecstatic:"เอ็กซ์ตาติก","today-events":"กิจกรรมวันนี้","tomorrow-events":"พรุ่งนี้",happening:"ตอนนี้","party-venues":"ปาร์ตี้ & ดนตรี","sport-venues":"กีฬา & ฟิตเนส","wellness-venues":"สุขภาพ & การปฏิบัติ","restaurant-venues":"ร้านอาหาร & คาเฟ่",date:"วันที่",price:"ราคา",lineup:"ศิลปิน",status:"สถานะ",remind:"เตือน",share:"แชร์",directions:"เส้นทาง",login:"เข้าสู่ระบบ",signup:"สมัคร","rn-title":"กำลังเกิดขึ้น","starting-soon":"เริ่มเร็วๆนี้","whats-on":"วันนี้มีอะไร","next-up":"ถัดไป","check-tmrw":"ดูพรุ่งนี้","add-calendar":"เพิ่มในปฏิทิน","view-details":"ดูรายละเอียด",calendar:"ปฏิทิน","get-ticket":"ซื้อบัตร",donation:"บริจาค",saved:"บันทึกแล้ว","clear-all":"ล้างทั้งหมด","no-events":"ไม่พบกิจกรรม","no-venues":"ไม่พบสถานที่","search-events":"ค้นหากิจกรรม สถานที่ ศิลปิน…","search-venues":"ค้นหาสถานที่…","loading-events":"กำลังโหลด…","map-coming":"แผนที่เร็วๆนี้",nearby:"ใกล้เคียง","pwa-title":"เพิ่มไปที่หน้าจอหลัก","pwa-sub":"สัมผัสบรรยากาศเกาะได้ทันที",temperature:"อุณหภูมิ",humidity:"ความชื้น",sunrise:"พระอาทิตย์ขึ้น",sunset:"พระอาทิตย์ตก","moon-phase":"วัฏจักรดวงจันทร์","full-moon-in":"จนถึงพระจันทร์เต็มดวง","lunar-cycle":"รอบจันทรคติ",wind:"ลม","wx-moon":"อากาศ & ดวงจันทร์",live:"สด",passed:"ผ่านไปแล้ว","in-time":"ใน"}
 };
 let lang = localStorage.getItem('fp-lang')||'en';
 function i(k){return(T[lang]||T.en)[k]||k}
@@ -603,6 +601,8 @@ function setLang(l){
   document.getElementById('ldd').classList.remove('open');
   document.querySelectorAll('.lopt').forEach(e=>{e.classList.remove('sel');if(e.onclick?.toString().includes("'"+l+"'"))e.classList.add('sel');});
   document.querySelectorAll('[data-i18n]').forEach(e=>{const k=e.getAttribute('data-i18n');if(T[l]&&T[l][k])e.textContent=T[l][k];});
+  // Placeholders
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(e=>{const k=e.getAttribute('data-i18n-placeholder');if(T[l]&&T[l][k])e.placeholder=T[l][k];});
   renderEvents();renderVenues();
 }
 function toggleLang(e){e.stopPropagation();document.getElementById('ldd').classList.toggle('open');}
@@ -817,6 +817,7 @@ async function fetchFromTodoToday(day){
         desc:        e.short_name || '',
         lineup:      [],
         ticketUrl:   e.link || e.google_map || null,
+        ticketType:  e.ticket_type || null,
         imageUrl:    e.image || null,
         mapsQ:       encodeQ(venue),
         source:      'todo.today'
@@ -935,10 +936,10 @@ async function fetchWeather(){
       if(!iso) return '';
       const t = new Date(iso);
       const diff = t - now;
-      if(diff < 0) return 'passed';
+      if(diff < 0) return i('passed')||'passed';
       const h = Math.floor(diff/3600000);
       const m = Math.floor((diff%3600000)/60000);
-      return h>0 ? `in ${h}h ${m}m` : `in ${m}m`;
+      const inT=i('in-time')||'in'; return h>0 ? `${inT} ${h}h ${m}m` : `${inT} ${m}m`;
     };
 
     // Header — show sunset if it hasn't passed yet
@@ -1047,28 +1048,28 @@ async function fetchEvents(){
   let evs=null, source='';
   // 1️⃣ Railway scraper
   try{
-    setAIBar('loading','🚂 Fetching from Railway scraper…');
+    setAIBar('loading','🚂 '+i('loading-events'));
     evs=await fetchFromRailway(curDay);
     source='Railway scraper';
   }catch(e1){
     console.log('[Railway] failed:',e1.message);
     // 2️⃣ todo.today direct API
     try{
-      setAIBar('loading','📍 Fetching from todo.today…');
+      setAIBar('loading','📍 '+i('loading-events'));
       evs=await fetchFromTodoToday(curDay);
       source='todo.today';
     }catch(e2){
       console.log('[todo.today] failed:',e2.message);
       // 3️⃣ phangan.events REST API
       try{
-        setAIBar('loading','📡 Fetching from phangan.events…');
+        setAIBar('loading','📡 '+i('loading-events'));
         evs=await fetchFromAPI(curDay);
         source='phangan.events';
       }catch(e3){
         console.log('[phangan.events] failed:',e3.message);
         // 4️⃣ Claude AI web search
         try{
-          setAIBar('loading','🔍 Searching via Claude AI…');
+          setAIBar('loading','🔍 '+i('loading-events'));
           evs=await fetchFromClaude(curDay);
           source='Claude AI';
         }catch(e4){
@@ -1166,7 +1167,7 @@ function buildCard(ev, isTmrw){
     <div class="ecard-body">
       <div class="ecard-row1">
         <div class="ecard-title">${ev.title}</div>
-        <span class="estat ${stCls(cd.s)}">${cd.s==='now'?'● LIVE':cd.l}</span>
+        <span class="estat ${stCls(cd.s)}">${cd.s==='now'?'● '+i('live'):cd.l}</span>
       </div>
       <div class="emeta">
         <span class="emi"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${ev.startTime||'—'} – ${ev.endTime||'—'}</span>
@@ -1176,11 +1177,11 @@ function buildCard(ev, isTmrw){
       ${lineupHtml}
       <div class="ecard-desc">${ev.desc||''}</div>
       <div class="ecard-acts">
-        <button class="abtn" data-eid="${sid}" data-tmrw="${isTmrw?1:0}" onclick="event.stopPropagation();openEv(this.dataset.eid,+this.dataset.tmrw);setTimeout(toggleRemind,80)">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          ${i('remind')}
+        <button class="abtn" data-eid="${sid}" data-tmrw="${isTmrw?1:0}" onclick="event.stopPropagation();openEv(this.dataset.eid,+this.dataset.tmrw);setTimeout(toggleCalendar,80)">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Calendar
         </button>
-        ${ev.ticketUrl
+        ${ev.ticketUrl && (ev.ticketType==='paid' || (!ev.donation && ev.price && !/free/i.test(ev.price)))
           ? `<a href="${ev.ticketUrl}" target="_blank" rel="noopener" class="abtn abtn-ticket" onclick="event.stopPropagation()"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M2 9a3 3 0 110-6 3 3 0 010 6z"/><path d="M13 20.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM2 9v10l9 3"/><line x1="22" y1="2" x2="11" y2="13"/></svg>${i('get-ticket')}</a>`
           : `<button class="abtn" onclick="event.stopPropagation();openMaps('${(ev.mapsQ||'').replace(/'/g,'')}')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>${i('directions')}</button>`
         }
@@ -1237,20 +1238,20 @@ function updateLiveBanner(){
   });
 
   if(active.length){
-    if(title) title.textContent='🔴 Happening right now';
+    if(title) title.textContent='🔴 '+i('rn-title');
     if(dot) dot.style.background='#ff4d6d';
     sub.textContent=active.length+' event'+(active.length>1?'s':'')+' live'+(soon.length?' · '+soon.length+' starting soon':'');
   } else if(soon.length){
-    if(title) title.textContent='⏱ Starting soon';
+    if(title) title.textContent='⏱ '+i('starting-soon');
     if(dot) dot.style.background='#ffd044';
     sub.textContent=soon.length+' event'+(soon.length>1?'s':'')+' within 2h';
   } else {
     const next=src.slice().sort((a,b)=>a.startTime.localeCompare(b.startTime)).find(e=>{
       const[sh,sm]=e.startTime.split(':').map(Number);return sh*60+sm>nm;
     });
-    if(title) title.textContent='📅 What\'s on today';
+    if(title) title.textContent='📅 '+i('whats-on');
     if(dot) dot.style.background='rgba(255,255,255,.3)';
-    sub.textContent=next?'Next: '+next.title+' at '+next.startTime:'Check Tomorrow';
+    sub.textContent=next?i('next-up')+': '+next.title+' at '+next.startTime:i('check-tmrw');
   }
 }
 
@@ -1276,7 +1277,7 @@ async function openEv(id, isTmrw){
   document.getElementById('m-date').textContent = evDate.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
   document.getElementById('m-price').textContent=pStr(ev)||'—';
   const cd=isTmrw?{l:ev.startTime,s:'tomorrow'}:getCd(ev);
-  document.getElementById('m-status').textContent=cd.s==='now'?'🔴 LIVE':(cd.s==='soon'?'🟡 '+cd.l:'⬜ '+cd.l);
+  document.getElementById('m-status').textContent=cd.s==='now'?'🔴 '+i('live'):(cd.s==='soon'?'🟡 '+cd.l:'⬜ '+cd.l);
   // Description — show loading then translate
   const descEl=document.getElementById('m-desc');
   descEl.textContent=ev.desc||'—';
@@ -1288,27 +1289,45 @@ async function openEv(id, isTmrw){
   const lsec=document.getElementById('m-lineup-sec'), ll=document.getElementById('m-lineup');
   if(ev.lineup&&ev.lineup.length){lsec.style.display='';ll.innerHTML=ev.lineup.map(a=>`<span class="ltag">${a}</span>`).join('');}
   else lsec.style.display='none';
-  // Ticket
-  document.getElementById('m-ticket-wrap').innerHTML=ev.ticketUrl
-    ?`<a href="${ev.ticketUrl}" target="_blank" rel="noopener" class="mact mact-ticket" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:2px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M2 9a3 3 0 110-6 3 3 0 010 6z"/><path d="M13 20.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM2 9v10l9 3"/><line x1="22" y1="2" x2="11" y2="13"/></svg>${i('get-ticket')}</a>`:''
-  ;
-  document.getElementById('remind-panel').classList.remove('open');
+  // Ticket — only show for paid events
+  const isPaid = ev.ticketType==='paid' || (!ev.donation && ev.price && !/free/i.test(ev.price));
+  document.getElementById('m-ticket-wrap').innerHTML = (isPaid && ev.ticketUrl)
+    ?`<a href="${ev.ticketUrl}" target="_blank" rel="noopener" class="mact mact-ticket" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:2px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M2 9a3 3 0 110-6 3 3 0 010 6z"/><path d="M13 20.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM2 9v10l9 3"/><line x1="22" y1="2" x2="11" y2="13"/></svg>${i('get-ticket')}</a>`
+    :'';
+  // Details link — todo.today page
+  document.getElementById('m-details-wrap').innerHTML = ev.ticketUrl
+    ?`<a href="${ev.ticketUrl}" target="_blank" rel="noopener" class="mact" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px;width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg data-i18n="view-details">View Details</a>`
+    :'';
+  // Calendar links
+  buildCalendarLinks(ev);
+  document.getElementById('calendar-panel').classList.remove('open');
   document.getElementById('share-panel').classList.remove('open');
   document.getElementById('ev-modal').classList.add('open');
 }
 
-function toggleRemind(){document.getElementById('share-panel').classList.remove('open');document.getElementById('remind-panel').classList.toggle('open');}
-function toggleShare(){document.getElementById('remind-panel').classList.remove('open');document.getElementById('share-panel').classList.toggle('open');}
-function setR(m){
-  if(!('Notification'in window)){showToast('Notifications not supported');return;}
-  Notification.requestPermission().then(p=>{
-    if(p==='granted'&&activeEv){const l=m<60?m+' min':(m/60)+'h';showToast('Reminder set: '+l+' before event');document.getElementById('remind-panel').classList.remove('open');}
-    else showToast('Allow notifications first');
-  });
+function buildCalendarLinks(ev){
+  if(!ev) return;
+  const dt = activeEv === ev ? (curDay==='tomorrow' ? TMRW_DT : TODAY_DT) : TODAY_DT;
+  const dateStr = dt.toISOString().split('T')[0].replace(/-/g,'');
+  const [sh,sm] = ev.startTime.split(':').map(Number);
+  const [eh,em] = (ev.endTime&&ev.endTime!=='00:00' ? ev.endTime : ev.startTime).split(':').map(Number);
+  const start = `${dateStr}T${String(sh).padStart(2,'0')}${String(sm).padStart(2,'0')}00`;
+  const end   = `${dateStr}T${String(eh).padStart(2,'0')}${String(em).padStart(2,'0')}00`;
+  const title = encodeURIComponent(ev.title);
+  const loc   = encodeURIComponent(ev.venue+', Koh Phangan');
+  // Google Calendar
+  const gUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&location=${loc}`;
+  document.getElementById('cal-google').href = gUrl;
+  // Apple .ics
+  const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:${ev.title}\nDTSTART:${start}\nDTEND:${end}\nLOCATION:${ev.venue}, Koh Phangan\nEND:VEVENT\nEND:VCALENDAR`;
+  document.getElementById('cal-apple').href = 'data:text/calendar;charset=utf8,'+encodeURIComponent(ics);
 }
+
+function toggleCalendar(){document.getElementById('share-panel').classList.remove('open');document.getElementById('calendar-panel').classList.toggle('open');}
+function toggleShare(){document.getElementById('calendar-panel').classList.remove('open');document.getElementById('share-panel').classList.toggle('open');}
 function shareWA(){if(!activeEv)return;window.open('https://wa.me/?text='+encodeURIComponent('🏝️ '+activeEv.title+'\n📍 '+activeEv.venue+'\n⏰ '+activeEv.startTime+'\n\nflow.phangan'));}
 function shareTG(){if(!activeEv)return;window.open('https://t.me/share/url?url=https://flow.phangan&text='+encodeURIComponent('🏝️ '+activeEv.title+' @ '+activeEv.venue));}
-function cpLink(){navigator.clipboard?.writeText('https://flow.phangan').then(()=>showToast('Link copied!'));}
+function cpLink(){navigator.clipboard?.writeText('https://flowphangan.pages.dev').then(()=>showToast('Link copied!'));}
 function doDir(){if(activeEv)openMaps(activeEv.mapsQ||activeEv.venue+'+Koh+Phangan');}
 function openMaps(q){window.open('https://maps.google.com/maps?q='+q);}
 
@@ -1453,7 +1472,7 @@ function renderVenues(q=''){
       <div class="vlist">${arr.map(v=>buildVCard(v)).join('')}</div>
     </div>`;
   };
-  document.getElementById('vc').innerHTML=(sec('party-venues',pV,'🎉')+sec('wellness-venues',wV,'🌿')+sec('sport-venues',sV,'🔴')+sec('restaurant-venues',rV,'🍽️')||'<div class="empty">No venues found</div>')+'<div style="height:80px"></div>';
+  document.getElementById('vc').innerHTML=(sec('party-venues',pV,'🎉')+sec('wellness-venues',wV,'🌿')+sec('sport-venues',sV,'🔴')+sec('restaurant-venues',rV,'🍽️')||i('no-venues')?'<div class="empty">'+i('no-venues')+'</div>':'<div class="empty">No venues found</div>')+'<div style="height:80px"></div>';
 
 }
 function toggleSec(id){
