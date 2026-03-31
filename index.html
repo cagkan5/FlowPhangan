@@ -1522,7 +1522,7 @@ function showTab(tab){
 function closeOv(id,e){if(e.target===document.getElementById(id))document.getElementById(id).classList.remove('open');}
 function openWx(){updateMoon();document.getElementById('wx-modal').classList.add('open');}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
-function openMaps(q){window.open('https://maps.google.com/maps?q='+q);}
+function openMaps(q){window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q+' Koh Phangan'),'_blank');}
 
 // ══════════════════════════════════════════════════════
 // INIT
@@ -1535,15 +1535,10 @@ document.addEventListener('DOMContentLoaded',()=>{
   renderVenues();
   updateMoon();
   updateFavBadge();
-  // Map nearby
-  const near=[...VENUES.party.slice(0,3),...VENUES.wellness.slice(0,3)];
-  document.getElementById('map-v').innerHTML='<div class="vlist">'+near.map(v=>buildVCard(v)).join('')+'</div><div style="height:80px"></div>';
   // Fetch live data
   fetchEvents();
   // Fetch real weather from Open-Meteo
   fetchWeather();
-  // Venue photos: loaded from photoCache when venues are added manually
-  // loadAllVenuePhotos() removed — Railway scraper no longer in use
   // Periodic refresh: events every 30min (handled by setInterval above), weather every 10min
   setInterval(()=>{renderEvents();updateMoon();updateCD();},60000);
   setInterval(fetchWeather, 10*60*1000);
