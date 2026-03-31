@@ -1080,7 +1080,6 @@ async function fetchEvents(){
   fetching=false;
 }
 
-// Auto-refresh every 30 minutes
 setInterval(()=>{
   cache.today={data:null,ts:0};
   cache.tomorrow={data:null,ts:0};
@@ -1237,7 +1236,20 @@ function updateLiveBanner(){
 }
 
 function showLive(){curDay='today';curCat='all';document.querySelectorAll('.dchip').forEach((c,idx)=>c.classList.toggle('active',idx===0));document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('active'));document.querySelector('.fchip-all').classList.add('active');renderEvents();}
-function setDay(d,el){curDay=d;document.querySelectorAll('.dchip').forEach(c=>c.classList.remove('active'));el.classList.add('active');if(!allEvs[d].length)fetchEvents();else renderEvents();}
+function setDay(d,el){
+  curDay=d;
+  document.querySelectorAll('.dchip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  // Always fetch if no cached real data (fallback data doesn't count)
+  const cached=cache[d];
+  if(cached.data&&cached.data.length){
+    allEvs[d]=cached.data;
+    renderEvents();
+  } else {
+    fetching=false; // reset lock in case it got stuck
+    fetchEvents();
+  }
+}
 function setCat(c,el){curCat=c;document.querySelectorAll('.fchip').forEach(x=>x.classList.remove('active'));el.classList.add('active');renderEvents();}
 
 // ══════════════════════════════════════════════════════
@@ -1529,8 +1541,8 @@ function openMaps(q){window.open('https://www.google.com/maps/search/?api=1&quer
 // ══════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded',()=>{
   applyTheme();
-  allEvs.today = FALLBACK_TODAY;
-  allEvs.tomorrow = FALLBACK_TMRW;
+  // Don't pre-populate allEvs with fallback — fetchEvents will handle offline fallback
+  // allEvs stays empty so setDay correctly triggers fetchEvents
   setLang(lang);
   renderVenues();
   updateMoon();
