@@ -620,18 +620,12 @@ let curDay='today', curCat='all', activeEv=null, fetching=false;
 
 function fmtDate(d){return d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}
 
-// Translate description via Claude API
+// Translation: Anthropic API requires a server-side key — browser calls return 401.
+// Descriptions come from todo.today in English. We show a small badge if UI lang != EN.
 async function translateDesc(text, targetLang){
-  if(targetLang==='en'||!text) return text;
-  const langNames={tr:'Turkish',fr:'French',es:'Spanish',ru:'Russian',th:'Thai'};
-  const resp = await fetch("https://api.anthropic.com/v1/messages",{
-    method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:500,
-      messages:[{role:"user",content:`Translate this event description to ${langNames[targetLang]}. Return ONLY the translation, nothing else:\n\n${text}`}]})
-  });
-  if(!resp.ok) return text;
-  const d=await resp.json();
-  return d.content?.[0]?.text||text;
+  // No-op: server-side translation not available from browser without a proxy.
+  // Return original text — descriptions are in English from todo.today.
+  return text;
 }
 
 // Fetch events from phangan.events Tribe REST API
@@ -779,8 +773,11 @@ async function fetchFromTodoToday(day){
     if(!r.ok) throw new Error('todo.today HTTP '+r.status);
     const d = await r.json();
 
-    // Flatten all sections, skip highlight/tomorrow/up_next
-    const skip = ['today_highlight','more_tomorrow','up_next'];
+    // Flatten all sections — skip sections not relevant to current day
+    // 'more_tomorrow' only skipped when fetching today (it's a teaser), kept for tomorrow fetches
+    const skip = day === 'today'
+      ? ['more_tomorrow', 'up_next']
+      : ['today_highlight', 'up_next'];
     const allEvents = [];
     const seen = new Set();
     (d.sections||[]).forEach(sec => {
@@ -814,7 +811,7 @@ async function fetchFromTodoToday(day){
         endsNextDay: false,
         price,
         donation:    /donation/i.test(priceRaw),
-        desc:        e.short_name || '',
+        desc:        (e.description||e.short_name||'').replace(/<[^>]+>/g,'').trim().slice(0,400),
         lineup:      [],
         ticketUrl:   e.link || e.google_map || null,
         ticketType:  e.ticket_type || null,
@@ -1046,39 +1043,23 @@ async function fetchEvents(){
     return;
   }
   let evs=null, source='';
-  // 1️⃣ Railway scraper
+  // 1️⃣ todo.today direct API (primary)
   try{
-    setAIBar('loading','🚂 '+i('loading-events'));
-    evs=await fetchFromRailway(curDay);
-    source='Railway scraper';
+    setAIBar('loading','📍 '+i('loading-events'));
+    evs=await fetchFromTodoToday(curDay);
+    source='todo.today';
   }catch(e1){
-    console.log('[Railway] failed:',e1.message);
-    // 2️⃣ todo.today direct API
+    console.log('[todo.today] failed:',e1.message);
+    // 2️⃣ Claude AI web search
     try{
-      setAIBar('loading','📍 '+i('loading-events'));
-      evs=await fetchFromTodoToday(curDay);
-      source='todo.today';
+      setAIBar('loading','🔍 '+i('loading-events'));
+      evs=await fetchFromClaude(curDay);
+      source='Claude AI';
     }catch(e2){
-      console.log('[todo.today] failed:',e2.message);
-      // 3️⃣ phangan.events REST API
-      try{
-        setAIBar('loading','📡 '+i('loading-events'));
-        evs=await fetchFromAPI(curDay);
-        source='phangan.events';
-      }catch(e3){
-        console.log('[phangan.events] failed:',e3.message);
-        // 4️⃣ Claude AI web search
-        try{
-          setAIBar('loading','🔍 '+i('loading-events'));
-          evs=await fetchFromClaude(curDay);
-          source='Claude AI';
-        }catch(e4){
-          console.log('[Claude] failed:',e4.message);
-          // 5️⃣ Offline fallback
-          evs=curDay==='today'?FALLBACK_TODAY:FALLBACK_TMRW;
-          source='offline';
-        }
-      }
+      console.log('[Claude] failed:',e2.message);
+      // 3️⃣ Offline fallback
+      evs=curDay==='today'?FALLBACK_TODAY:FALLBACK_TMRW;
+      source='offline';
     }
   }
   if(evs&&evs.length&&source!=='offline'){
@@ -1278,13 +1259,10 @@ async function openEv(id, isTmrw){
   document.getElementById('m-price').textContent=pStr(ev)||'—';
   const cd=isTmrw?{l:ev.startTime,s:'tomorrow'}:getCd(ev);
   document.getElementById('m-status').textContent=cd.s==='now'?'🔴 '+i('live'):(cd.s==='soon'?'🟡 '+cd.l:'⬜ '+cd.l);
-  // Description — show loading then translate
+  // Description
   const descEl=document.getElementById('m-desc');
   descEl.textContent=ev.desc||'—';
-  if(lang!=='en'&&ev.desc){
-    descEl.style.opacity='0.5';
-    translateDesc(ev.desc,lang).then(t=>{descEl.textContent=t;descEl.style.opacity='1';});
-  }
+  descEl.style.opacity='1';
   // Lineup
   const lsec=document.getElementById('m-lineup-sec'), ll=document.getElementById('m-lineup');
   if(ev.lineup&&ev.lineup.length){lsec.style.display='';ll.innerHTML=ev.lineup.map(a=>`<span class="ltag">${a}</span>`).join('');}
@@ -1472,7 +1450,8 @@ function renderVenues(q=''){
       <div class="vlist">${arr.map(v=>buildVCard(v)).join('')}</div>
     </div>`;
   };
-  document.getElementById('vc').innerHTML=(sec('party-venues',pV,'🎉')+sec('wellness-venues',wV,'🌿')+sec('sport-venues',sV,'🔴')+sec('restaurant-venues',rV,'🍽️')||i('no-venues')?'<div class="empty">'+i('no-venues')+'</div>':'<div class="empty">No venues found</div>')+'<div style="height:80px"></div>';
+  const html = sec('party-venues',pV,'🎉') + sec('wellness-venues',wV,'🌿') + sec('sport-venues',sV,'🔴') + sec('restaurant-venues',rV,'🍽️');
+  document.getElementById('vc').innerHTML = (html || `<div class="empty">${i('no-venues')}</div>`) + '<div style="height:80px"></div>';
 
 }
 function toggleSec(id){
@@ -1563,8 +1542,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   fetchEvents();
   // Fetch real weather from Open-Meteo
   fetchWeather();
-  // Load venue photos from Railway
-  loadAllVenuePhotos();
+  // Venue photos: loaded from photoCache when venues are added manually
+  // loadAllVenuePhotos() removed — Railway scraper no longer in use
   // Periodic refresh: events every 30min (handled by setInterval above), weather every 10min
   setInterval(()=>{renderEvents();updateMoon();updateCD();},60000);
   setInterval(fetchWeather, 10*60*1000);
