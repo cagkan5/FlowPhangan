@@ -230,6 +230,9 @@ main{max-width:680px;margin:0 auto}
 /* Map */
 .mapp{margin:14px;background:var(--card);border-radius:var(--r);height:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;border:1px solid var(--border)}
 .mapp svg{opacity:.12}.mapp-lbl{font-size:.82rem;color:var(--text3)}
+.near-me-btn{display:flex;align-items:center;gap:8px;padding:12px 22px;background:var(--accent);color:#fff;border:none;border-radius:50px;font-size:.9rem;font-weight:600;cursor:pointer;letter-spacing:.01em;transition:opacity .15s}
+.near-me-btn:active{opacity:.75}.near-me-btn svg{opacity:1;flex-shrink:0}
+.vdist{font-size:.72rem;color:var(--accent);font-weight:600;margin-left:4px;background:color-mix(in srgb,var(--accent) 12%,transparent);padding:2px 6px;border-radius:20px}
 
 .empty{text-align:center;padding:50px 20px;color:var(--text3);font-size:.84rem}
 
@@ -358,11 +361,14 @@ main{max-width:680px;margin:0 auto}
 
 <!-- MAP TAB -->
 <div class="tab-page" id="tab-map">
-  <div class="mapp">
-    <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
-    <span class="mapp-lbl" data-i18n="map-coming">Interactive map coming soon</span>
+  <div class="mapp" id="mapp-hero">
+    <button class="near-me-btn" id="near-me-btn" onclick="initNearMe()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z" stroke-dasharray="3 3"/></svg>
+      <span data-i18n="find-near-me">Find venues near me</span>
+    </button>
+    <div id="near-me-status" class="mapp-lbl" style="display:none"></div>
   </div>
-  <div class="vsec-hdr"><span class="vsec-t" data-i18n="nearby">Nearby Venues</span></div>
+  <div class="vsec-hdr" id="nearby-hdr" style="display:none"><span class="vsec-t" data-i18n="nearby">Nearby Venues</span></div>
   <div class="vgrid" id="map-v" style="padding-bottom:80px"></div>
 </div>
 
@@ -586,12 +592,12 @@ function updateCD(){
 // I18N — full multilingual with description translations
 // ══════════════════════════════════════════════════════
 const T = {
-  en:{events:"Events",venues:"Venues",map:"Map",today:"Today",tomorrow:"Tomorrow",all:"All",fmusic:"Music",fparty:"Party",fpractices:"Practices",fmovement:"Movement",fsport:"Sport",fworkshop:"Workshop",ffestival:"Festival",fwellness:"Wellness",fyoga:"Yoga",fecstatic:"Ecstatic","today-events":"Today's Events","tomorrow-events":"Tomorrow's Events",happening:"Happening now","party-venues":"Party & Music","sport-venues":"Sport & Fitness","wellness-venues":"Wellness & Practices","restaurant-venues":"Restaurants & Cafes",date:"Date",price:"Price",lineup:"Line-up",status:"Status",remind:"Remind",share:"Share",directions:"Directions",login:"Login",signup:"Sign up","rn-title":"Happening right now","starting-soon":"Starting soon","whats-on":"What's on today","next-up":"Next","check-tmrw":"Check Tomorrow","add-calendar":"Add to Calendar","view-details":"View Details",calendar:"Calendar","get-ticket":"Get Tickets",donation:"Donation",saved:"Saved","clear-all":"Clear all","no-events":"No events found","no-venues":"No venues found","search-events":"Search events, venues, artists…","search-venues":"Search venues…","loading-events":"Loading live events…","map-coming":"Interactive map coming soon",nearby:"Nearby Venues","pwa-title":"Add to Home Screen","pwa-sub":"One tap away from the island vibes",temperature:"Temperature",humidity:"Humidity",sunrise:"Sunrise",sunset:"Sunset","moon-phase":"Moon Phase","full-moon-in":"Full Moon in","lunar-cycle":"Lunar Cycle",wind:"Wind","wx-moon":"Weather & Moon",live:"LIVE",passed:"passed","in-time":"in"},
-  tr:{events:"Etkinlikler",venues:"Mekanlar",map:"Harita",today:"Bugün",tomorrow:"Yarın",all:"Tümü",fmusic:"Müzik",fparty:"Parti",fpractices:"Pratikler",fmovement:"Hareket",fsport:"Spor",fworkshop:"Atölye",ffestival:"Festival",fwellness:"Wellness",fyoga:"Yoga",fecstatic:"Ecstatic","today-events":"Bugünkü Etkinlikler","tomorrow-events":"Yarınki Etkinlikler",happening:"Şu an","party-venues":"Parti & Müzik","sport-venues":"Spor & Fitness","wellness-venues":"Wellness & Pratikler","restaurant-venues":"Restoranlar & Kafeler",date:"Tarih",price:"Fiyat",lineup:"Sanatçılar",status:"Durum",remind:"Hatırlat",share:"Paylaş",directions:"Yol Tarifi",login:"Giriş",signup:"Kayıt","rn-title":"Şu an devam ediyor","starting-soon":"Yakında başlıyor","whats-on":"Bugün ne var","next-up":"Sıradaki","check-tmrw":"Yarına bak","add-calendar":"Takvime Ekle","view-details":"Detaylar",calendar:"Takvim","get-ticket":"Bilet Al",donation:"Bağış",saved:"Kaydedilenler","clear-all":"Temizle","no-events":"Etkinlik bulunamadı","no-venues":"Mekan bulunamadı","search-events":"Etkinlik, mekan, sanatçı ara…","search-venues":"Mekan ara…","loading-events":"Canlı etkinlikler yükleniyor…","map-coming":"Harita çok yakında",nearby:"Yakın Mekanlar","pwa-title":"Ana Ekrana Ekle","pwa-sub":"Ada vibesına tek dokunuş",temperature:"Sıcaklık",humidity:"Nem",sunrise:"Gün Doğumu",sunset:"Gün Batımı","moon-phase":"Ay Fazı","full-moon-in":"Dolunaya Kalan","lunar-cycle":"Ay Döngüsü",wind:"Rüzgar","wx-moon":"Hava & Ay",live:"CANLI",passed:"geçti","in-time":"içinde"},
-  fr:{events:"Événements",venues:"Lieux",map:"Carte",today:"Aujourd'hui",tomorrow:"Demain",all:"Tous",fmusic:"Musique",fparty:"Fête",fpractices:"Pratiques",fmovement:"Mouvement",fsport:"Sport",fworkshop:"Atelier",ffestival:"Festival",fwellness:"Bien-être",fyoga:"Yoga",fecstatic:"Ecstatique","today-events":"Aujourd'hui","tomorrow-events":"Demain",happening:"En cours","party-venues":"Fête & Musique","sport-venues":"Sport & Fitness","wellness-venues":"Bien-être & Pratiques","restaurant-venues":"Restaurants & Cafés",date:"Date",price:"Prix",lineup:"Artistes",status:"Statut",remind:"Rappel",share:"Partager",directions:"Itinéraire",login:"Connexion",signup:"S'inscrire","rn-title":"En ce moment","starting-soon":"Bientôt","whats-on":"Programme du jour","next-up":"Prochain","check-tmrw":"Voir demain","add-calendar":"Ajouter au calendrier","view-details":"Voir détails",calendar:"Calendrier","get-ticket":"Billets",donation:"Libre",saved:"Sauvegardés","clear-all":"Tout effacer","no-events":"Aucun événement","no-venues":"Aucun lieu","search-events":"Chercher événements, lieux, artistes…","search-venues":"Chercher lieux…","loading-events":"Chargement…","map-coming":"Carte bientôt",nearby:"À proximité","pwa-title":"Ajouter à l'écran","pwa-sub":"À un tap des vibes de l'île",temperature:"Température",humidity:"Humidité",sunrise:"Lever du soleil",sunset:"Coucher du soleil","moon-phase":"Phase lunaire","full-moon-in":"Pleine lune dans","lunar-cycle":"Cycle lunaire",wind:"Vent","wx-moon":"Météo & Lune",live:"EN DIRECT",passed:"passé","in-time":"dans"},
-  es:{events:"Eventos",venues:"Lugares",map:"Mapa",today:"Hoy",tomorrow:"Mañana",all:"Todo",fmusic:"Música",fparty:"Fiesta",fpractices:"Prácticas",fmovement:"Movimiento",fsport:"Deporte",fworkshop:"Taller",ffestival:"Festival",fwellness:"Bienestar",fyoga:"Yoga",fecstatic:"Extático","today-events":"Hoy","tomorrow-events":"Mañana",happening:"Ahora","party-venues":"Fiesta & Música","sport-venues":"Deporte & Fitness","wellness-venues":"Bienestar & Prácticas","restaurant-venues":"Restaurantes & Cafés",date:"Fecha",price:"Precio",lineup:"Artistas",status:"Estado",remind:"Recordar",share:"Compartir",directions:"Cómo llegar",login:"Entrar",signup:"Registrarse","rn-title":"Ahora mismo","starting-soon":"Pronto","whats-on":"Qué hay hoy","next-up":"Siguiente","check-tmrw":"Ver mañana","add-calendar":"Añadir al calendario","view-details":"Ver detalles",calendar:"Calendario","get-ticket":"Entradas",donation:"Donación",saved:"Guardados","clear-all":"Borrar todo","no-events":"No hay eventos","no-venues":"No hay lugares","search-events":"Buscar eventos, lugares, artistas…","search-venues":"Buscar lugares…","loading-events":"Cargando…","map-coming":"Mapa próximamente",nearby:"Cerca","pwa-title":"Añadir a pantalla","pwa-sub":"A un toque de las vibras de la isla",temperature:"Temperatura",humidity:"Humedad",sunrise:"Amanecer",sunset:"Atardecer","moon-phase":"Fase lunar","full-moon-in":"Luna llena en","lunar-cycle":"Ciclo lunar",wind:"Viento","wx-moon":"Clima & Luna",live:"EN VIVO",passed:"pasado","in-time":"en"},
-  ru:{events:"События",venues:"Площадки",map:"Карта",today:"Сегодня",tomorrow:"Завтра",all:"Все",fmusic:"Музыка",fparty:"Вечеринка",fpractices:"Практики",fmovement:"Движение",fsport:"Спорт",fworkshop:"Мастерская",ffestival:"Фестиваль",fwellness:"Велнес",fyoga:"Йога",fecstatic:"Экстатик","today-events":"Сегодня","tomorrow-events":"Завтра",happening:"Сейчас","party-venues":"Вечеринки & Музыка","sport-venues":"Спорт & Фитнес","wellness-venues":"Оздоровление & Практики","restaurant-venues":"Рестораны & Кафе",date:"Дата",price:"Цена",lineup:"Артисты",status:"Статус",remind:"Напомнить",share:"Поделиться",directions:"Маршрут",login:"Войти",signup:"Регистрация","rn-title":"Сейчас","starting-soon":"Скоро начнётся","whats-on":"Что сегодня","next-up":"Следующее","check-tmrw":"На завтра","add-calendar":"В календарь","view-details":"Подробнее",calendar:"Календарь","get-ticket":"Билеты",donation:"Донейшн",saved:"Сохранённые","clear-all":"Очистить","no-events":"Нет событий","no-venues":"Нет площадок","search-events":"Поиск событий, мест, артистов…","search-venues":"Поиск мест…","loading-events":"Загрузка…","map-coming":"Карта скоро",nearby:"Рядом","pwa-title":"На главный экран","pwa-sub":"Один тап до атмосферы острова",temperature:"Температура",humidity:"Влажность",sunrise:"Рассвет",sunset:"Закат","moon-phase":"Фаза луны","full-moon-in":"До полнолуния","lunar-cycle":"Лунный цикл",wind:"Ветер","wx-moon":"Погода & Луна",live:"ПРЯМО СЕЙЧАС",passed:"прошло","in-time":"через"},
-  th:{events:"กิจกรรม",venues:"สถานที่",map:"แผนที่",today:"วันนี้",tomorrow:"พรุ่งนี้",all:"ทั้งหมด",fmusic:"ดนตรี",fparty:"ปาร์ตี้",fpractices:"การปฏิบัติ",fmovement:"การเคลื่อนไหว",fsport:"กีฬา",fworkshop:"เวิร์กช็อป",ffestival:"เทศกาล",fwellness:"เวลเนส",fyoga:"โยคะ",fecstatic:"เอ็กซ์ตาติก","today-events":"กิจกรรมวันนี้","tomorrow-events":"พรุ่งนี้",happening:"ตอนนี้","party-venues":"ปาร์ตี้ & ดนตรี","sport-venues":"กีฬา & ฟิตเนส","wellness-venues":"สุขภาพ & การปฏิบัติ","restaurant-venues":"ร้านอาหาร & คาเฟ่",date:"วันที่",price:"ราคา",lineup:"ศิลปิน",status:"สถานะ",remind:"เตือน",share:"แชร์",directions:"เส้นทาง",login:"เข้าสู่ระบบ",signup:"สมัคร","rn-title":"กำลังเกิดขึ้น","starting-soon":"เริ่มเร็วๆนี้","whats-on":"วันนี้มีอะไร","next-up":"ถัดไป","check-tmrw":"ดูพรุ่งนี้","add-calendar":"เพิ่มในปฏิทิน","view-details":"ดูรายละเอียด",calendar:"ปฏิทิน","get-ticket":"ซื้อบัตร",donation:"บริจาค",saved:"บันทึกแล้ว","clear-all":"ล้างทั้งหมด","no-events":"ไม่พบกิจกรรม","no-venues":"ไม่พบสถานที่","search-events":"ค้นหากิจกรรม สถานที่ ศิลปิน…","search-venues":"ค้นหาสถานที่…","loading-events":"กำลังโหลด…","map-coming":"แผนที่เร็วๆนี้",nearby:"ใกล้เคียง","pwa-title":"เพิ่มไปที่หน้าจอหลัก","pwa-sub":"สัมผัสบรรยากาศเกาะได้ทันที",temperature:"อุณหภูมิ",humidity:"ความชื้น",sunrise:"พระอาทิตย์ขึ้น",sunset:"พระอาทิตย์ตก","moon-phase":"วัฏจักรดวงจันทร์","full-moon-in":"จนถึงพระจันทร์เต็มดวง","lunar-cycle":"รอบจันทรคติ",wind:"ลม","wx-moon":"อากาศ & ดวงจันทร์",live:"สด",passed:"ผ่านไปแล้ว","in-time":"ใน"}
+  en:{events:"Events",venues:"Venues",map:"Map",today:"Today",tomorrow:"Tomorrow",all:"All",fmusic:"Music",fparty:"Party",fpractices:"Practices",fmovement:"Movement",fsport:"Sport",fworkshop:"Workshop",ffestival:"Festival",fwellness:"Wellness",fyoga:"Yoga",fecstatic:"Ecstatic","today-events":"Today's Events","tomorrow-events":"Tomorrow's Events",happening:"Happening now","party-venues":"Party & Music","sport-venues":"Sport & Fitness","wellness-venues":"Wellness & Practices","restaurant-venues":"Restaurants & Cafes",date:"Date",price:"Price",lineup:"Line-up",status:"Status",remind:"Remind",share:"Share",directions:"Directions",login:"Login",signup:"Sign up","rn-title":"Happening right now","starting-soon":"Starting soon","whats-on":"What's on today","next-up":"Next","check-tmrw":"Check Tomorrow","add-calendar":"Add to Calendar","view-details":"View Details",calendar:"Calendar","get-ticket":"Get Tickets",donation:"Donation",saved:"Saved","clear-all":"Clear all","no-events":"No events found","no-venues":"No venues found","search-events":"Search events, venues, artists…","search-venues":"Search venues…","loading-events":"Loading live events…","map-coming":"Interactive map coming soon",nearby:"Nearby Venues","find-near-me":"Find venues near me","locating":"Getting your location…","location-denied":"Location access denied. Enable in browser settings.","km-away":"km away","pwa-title":"Add to Home Screen","pwa-sub":"One tap away from the island vibes",temperature:"Temperature",humidity:"Humidity",sunrise:"Sunrise",sunset:"Sunset","moon-phase":"Moon Phase","full-moon-in":"Full Moon in","lunar-cycle":"Lunar Cycle",wind:"Wind","wx-moon":"Weather & Moon",live:"LIVE",passed:"passed","in-time":"in"},
+  tr:{events:"Etkinlikler",venues:"Mekanlar",map:"Harita",today:"Bugün",tomorrow:"Yarın",all:"Tümü",fmusic:"Müzik",fparty:"Parti",fpractices:"Pratikler",fmovement:"Hareket",fsport:"Spor",fworkshop:"Atölye",ffestival:"Festival",fwellness:"Wellness",fyoga:"Yoga",fecstatic:"Ecstatic","today-events":"Bugünkü Etkinlikler","tomorrow-events":"Yarınki Etkinlikler",happening:"Şu an","party-venues":"Parti & Müzik","sport-venues":"Spor & Fitness","wellness-venues":"Wellness & Pratikler","restaurant-venues":"Restoranlar & Kafeler",date:"Tarih",price:"Fiyat",lineup:"Sanatçılar",status:"Durum",remind:"Hatırlat",share:"Paylaş",directions:"Yol Tarifi",login:"Giriş",signup:"Kayıt","rn-title":"Şu an devam ediyor","starting-soon":"Yakında başlıyor","whats-on":"Bugün ne var","next-up":"Sıradaki","check-tmrw":"Yarına bak","add-calendar":"Takvime Ekle","view-details":"Detaylar",calendar:"Takvim","get-ticket":"Bilet Al",donation:"Bağış",saved:"Kaydedilenler","clear-all":"Temizle","no-events":"Etkinlik bulunamadı","no-venues":"Mekan bulunamadı","search-events":"Etkinlik, mekan, sanatçı ara…","search-venues":"Mekan ara…","loading-events":"Canlı etkinlikler yükleniyor…","map-coming":"Harita çok yakında",nearby:"Yakın Mekanlar","find-near-me":"Yakınımdaki mekanları bul","locating":"Konumunuz alınıyor…","location-denied":"Konum erişimi reddedildi. Tarayıcı ayarlarından etkinleştirin.","km-away":"km uzakta","pwa-title":"Ana Ekrana Ekle","pwa-sub":"Ada vibesına tek dokunuş",temperature:"Sıcaklık",humidity:"Nem",sunrise:"Gün Doğumu",sunset:"Gün Batımı","moon-phase":"Ay Fazı","full-moon-in":"Dolunaya Kalan","lunar-cycle":"Ay Döngüsü",wind:"Rüzgar","wx-moon":"Hava & Ay",live:"CANLI",passed:"geçti","in-time":"içinde"},
+  fr:{events:"Événements",venues:"Lieux",map:"Carte",today:"Aujourd'hui",tomorrow:"Demain",all:"Tous",fmusic:"Musique",fparty:"Fête",fpractices:"Pratiques",fmovement:"Mouvement",fsport:"Sport",fworkshop:"Atelier",ffestival:"Festival",fwellness:"Bien-être",fyoga:"Yoga",fecstatic:"Ecstatique","today-events":"Aujourd'hui","tomorrow-events":"Demain",happening:"En cours","party-venues":"Fête & Musique","sport-venues":"Sport & Fitness","wellness-venues":"Bien-être & Pratiques","restaurant-venues":"Restaurants & Cafés",date:"Date",price:"Prix",lineup:"Artistes",status:"Statut",remind:"Rappel",share:"Partager",directions:"Itinéraire",login:"Connexion",signup:"S'inscrire","rn-title":"En ce moment","starting-soon":"Bientôt","whats-on":"Programme du jour","next-up":"Prochain","check-tmrw":"Voir demain","add-calendar":"Ajouter au calendrier","view-details":"Voir détails",calendar:"Calendrier","get-ticket":"Billets",donation:"Libre",saved:"Sauvegardés","clear-all":"Tout effacer","no-events":"Aucun événement","no-venues":"Aucun lieu","search-events":"Chercher événements, lieux, artistes…","search-venues":"Chercher lieux…","loading-events":"Chargement…","map-coming":"Carte bientôt",nearby:"À proximité","find-near-me":"Trouver des lieux près de moi","locating":"Localisation en cours…","location-denied":"Accès à la localisation refusé. Activez-le dans les paramètres.","km-away":"km","pwa-title":"Ajouter à l'écran","pwa-sub":"À un tap des vibes de l'île",temperature:"Température",humidity:"Humidité",sunrise:"Lever du soleil",sunset:"Coucher du soleil","moon-phase":"Phase lunaire","full-moon-in":"Pleine lune dans","lunar-cycle":"Cycle lunaire",wind:"Vent","wx-moon":"Météo & Lune",live:"EN DIRECT",passed:"passé","in-time":"dans"},
+  es:{events:"Eventos",venues:"Lugares",map:"Mapa",today:"Hoy",tomorrow:"Mañana",all:"Todo",fmusic:"Música",fparty:"Fiesta",fpractices:"Prácticas",fmovement:"Movimiento",fsport:"Deporte",fworkshop:"Taller",ffestival:"Festival",fwellness:"Bienestar",fyoga:"Yoga",fecstatic:"Extático","today-events":"Hoy","tomorrow-events":"Mañana",happening:"Ahora","party-venues":"Fiesta & Música","sport-venues":"Deporte & Fitness","wellness-venues":"Bienestar & Prácticas","restaurant-venues":"Restaurantes & Cafés",date:"Fecha",price:"Precio",lineup:"Artistas",status:"Estado",remind:"Recordar",share:"Compartir",directions:"Cómo llegar",login:"Entrar",signup:"Registrarse","rn-title":"Ahora mismo","starting-soon":"Pronto","whats-on":"Qué hay hoy","next-up":"Siguiente","check-tmrw":"Ver mañana","add-calendar":"Añadir al calendario","view-details":"Ver detalles",calendar:"Calendario","get-ticket":"Entradas",donation:"Donación",saved:"Guardados","clear-all":"Borrar todo","no-events":"No hay eventos","no-venues":"No hay lugares","search-events":"Buscar eventos, lugares, artistas…","search-venues":"Buscar lugares…","loading-events":"Cargando…","map-coming":"Mapa próximamente",nearby:"Cerca","find-near-me":"Encontrar lugares cerca","locating":"Obteniendo tu ubicación…","location-denied":"Acceso a ubicación denegado. Actívalo en ajustes.","km-away":"km","pwa-title":"Añadir a pantalla","pwa-sub":"A un toque de las vibras de la isla",temperature:"Temperatura",humidity:"Humedad",sunrise:"Amanecer",sunset:"Atardecer","moon-phase":"Fase lunar","full-moon-in":"Luna llena en","lunar-cycle":"Ciclo lunar",wind:"Viento","wx-moon":"Clima & Luna",live:"EN VIVO",passed:"pasado","in-time":"en"},
+  ru:{events:"События",venues:"Площадки",map:"Карта",today:"Сегодня",tomorrow:"Завтра",all:"Все",fmusic:"Музыка",fparty:"Вечеринка",fpractices:"Практики",fmovement:"Движение",fsport:"Спорт",fworkshop:"Мастерская",ffestival:"Фестиваль",fwellness:"Велнес",fyoga:"Йога",fecstatic:"Экстатик","today-events":"Сегодня","tomorrow-events":"Завтра",happening:"Сейчас","party-venues":"Вечеринки & Музыка","sport-venues":"Спорт & Фитнес","wellness-venues":"Оздоровление & Практики","restaurant-venues":"Рестораны & Кафе",date:"Дата",price:"Цена",lineup:"Артисты",status:"Статус",remind:"Напомнить",share:"Поделиться",directions:"Маршрут",login:"Войти",signup:"Регистрация","rn-title":"Сейчас","starting-soon":"Скоро начнётся","whats-on":"Что сегодня","next-up":"Следующее","check-tmrw":"На завтра","add-calendar":"В календарь","view-details":"Подробнее",calendar:"Календарь","get-ticket":"Билеты",donation:"Донейшн",saved:"Сохранённые","clear-all":"Очистить","no-events":"Нет событий","no-venues":"Нет площадок","search-events":"Поиск событий, мест, артистов…","search-venues":"Поиск мест…","loading-events":"Загрузка…","map-coming":"Карта скоро",nearby:"Рядом","find-near-me":"Найти места рядом","locating":"Определяем местоположение…","location-denied":"Доступ к геолокации запрещён. Включите в настройках браузера.","km-away":"км","pwa-title":"На главный экран","pwa-sub":"Один тап до атмосферы острова",temperature:"Температура",humidity:"Влажность",sunrise:"Рассвет",sunset:"Закат","moon-phase":"Фаза луны","full-moon-in":"До полнолуния","lunar-cycle":"Лунный цикл",wind:"Ветер","wx-moon":"Погода & Луна",live:"ПРЯМО СЕЙЧАС",passed:"прошло","in-time":"через"},
+  th:{events:"กิจกรรม",venues:"สถานที่",map:"แผนที่",today:"วันนี้",tomorrow:"พรุ่งนี้",all:"ทั้งหมด",fmusic:"ดนตรี",fparty:"ปาร์ตี้",fpractices:"การปฏิบัติ",fmovement:"การเคลื่อนไหว",fsport:"กีฬา",fworkshop:"เวิร์กช็อป",ffestival:"เทศกาล",fwellness:"เวลเนส",fyoga:"โยคะ",fecstatic:"เอ็กซ์ตาติก","today-events":"กิจกรรมวันนี้","tomorrow-events":"พรุ่งนี้",happening:"ตอนนี้","party-venues":"ปาร์ตี้ & ดนตรี","sport-venues":"กีฬา & ฟิตเนส","wellness-venues":"สุขภาพ & การปฏิบัติ","restaurant-venues":"ร้านอาหาร & คาเฟ่",date:"วันที่",price:"ราคา",lineup:"ศิลปิน",status:"สถานะ",remind:"เตือน",share:"แชร์",directions:"เส้นทาง",login:"เข้าสู่ระบบ",signup:"สมัคร","rn-title":"กำลังเกิดขึ้น","starting-soon":"เริ่มเร็วๆนี้","whats-on":"วันนี้มีอะไร","next-up":"ถัดไป","check-tmrw":"ดูพรุ่งนี้","add-calendar":"เพิ่มในปฏิทิน","view-details":"ดูรายละเอียด",calendar:"ปฏิทิน","get-ticket":"ซื้อบัตร",donation:"บริจาค",saved:"บันทึกแล้ว","clear-all":"ล้างทั้งหมด","no-events":"ไม่พบกิจกรรม","no-venues":"ไม่พบสถานที่","search-events":"ค้นหากิจกรรม สถานที่ ศิลปิน…","search-venues":"ค้นหาสถานที่…","loading-events":"กำลังโหลด…","map-coming":"แผนที่เร็วๆนี้",nearby:"ใกล้เคียง","find-near-me":"ค้นหาสถานที่ใกล้ฉัน","locating":"กำลังระบุตำแหน่ง…","location-denied":"ปฏิเสธการเข้าถึงตำแหน่ง กรุณาเปิดในการตั้งค่าเบราว์เซอร์","km-away":"กม.","pwa-title":"เพิ่มไปที่หน้าจอหลัก","pwa-sub":"สัมผัสบรรยากาศเกาะได้ทันที",temperature:"อุณหภูมิ",humidity:"ความชื้น",sunrise:"พระอาทิตย์ขึ้น",sunset:"พระอาทิตย์ตก","moon-phase":"วัฏจักรดวงจันทร์","full-moon-in":"จนถึงพระจันทร์เต็มดวง","lunar-cycle":"รอบจันทรคติ",wind:"ลม","wx-moon":"อากาศ & ดวงจันทร์",live:"สด",passed:"ผ่านไปแล้ว","in-time":"ใน"}
 };
 let lang = localStorage.getItem('fp-lang')||'en';
 function i(k){return(T[lang]||T.en)[k]||k}
@@ -1283,16 +1289,17 @@ const VENUES = {
 
 
 
-function buildVCard(v){
+function buildVCard(v, dist){
   const catColors={music:'var(--music)',party:'var(--party)',practices:'var(--practices)',movement:'var(--movement)',sport:'var(--sport)',workshop:'var(--workshop)',festival:'var(--festival)',restaurant:'var(--restaurant)'};
   const col=catColors[v.type]||catColors.practices;
   const area=v.area.split('(')[0].split(',')[0].trim();
   const safe=v.name.replace(/'/g,"\'");
+  const distBadge=dist!=null?`<span class="vdist">${dist<1?(dist*1000).toFixed(0)+'m':dist.toFixed(1)+' '+i('km-away')}</span>`:'';
   return `<div class="vcard" onclick="openVenue('${safe}')">
     <div class="vcat-dot" style="background:${col}"></div>
     <div class="vcard-info">
       <div class="vname">${v.name}</div>
-      <div class="varea">📍 ${area}</div>
+      <div class="varea">📍 ${area}${distBadge}</div>
       <div class="vfacs">${v.facs.slice(0,3).map(f=>`<span class="vfac">${f}</span>`).join('')}</div>
     </div>
     <svg class="vcard-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
@@ -1327,21 +1334,21 @@ function toggleSec(id){
 }
 function searchV(q){renderVenues(q);}
 
+let activeModalVenue=null;
 function openVenue(name){
-  const allV=[...VENUES.party,...VENUES.wellness,...VENUES.restaurant];
+  const allV=[...VENUES.party,...VENUES.wellness,...VENUES.sport,...VENUES.restaurant];
   const v=allV.find(x=>x.name===name);
   if(!v)return;
+  activeModalVenue=name;
   const grad=CAT_GRAD[v.type]||CAT_GRAD.party;
   const links=[];
   if(v.web)links.push(`<a href="${v.web}" target="_blank" rel="noopener" class="vlink"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 014-10z"/></svg>Website</a>`);
   if(v.ig)links.push(`<a href="https://instagram.com/${v.ig.replace('@','')}" target="_blank" rel="noopener" class="vlink" style="color:#E1306C;border-color:rgba(225,48,108,.2)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>${v.ig}</a>`);
   if(v.maps)links.push(`<button class="vlink" onclick="openMaps('${v.maps}')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>${i('directions')}</button>`);
-  const photoUrl=v.imageUrl||null;
-  const heroHtml=photoUrl
-    ?`<div class="vmodal-photo" style="background:#000"><img src="${photoUrl}" alt="${v.name}" style="width:100%;height:100%;object-fit:cover;opacity:.85" onerror="this.style.display='none'"><div class="vmodal-ov"></div><div class="vmodal-title"><div class="vmodal-badge">${v.type} · ${v.area.split('(')[0].split(',')[0].trim()}</div><div class="vmodal-name">${v.name}</div></div></div>`
-    :`<div class="vmodal-photo" style="background:${grad}"><div class="vmodal-ov"></div><div class="vmodal-title"><div class="vmodal-badge">${v.type} · ${v.area.split('(')[0].split(',')[0].trim()}</div><div class="vmodal-name">${v.name}</div></div></div>`;
+  const badge=`${v.type} · ${v.area.split('(')[0].split(',')[0].trim()}`;
+  const gradHero=`<div class="vmodal-photo" id="vmodal-hero" style="background:${grad}"><div class="vmodal-ov"></div><div class="vmodal-title"><div class="vmodal-badge">${badge}</div><div class="vmodal-name">${v.name}</div></div></div>`;
   document.getElementById('vm-content').innerHTML=`
-    ${heroHtml}
+    ${gradHero}
     <div class="vmodal-body">
       <div class="vmodal-area"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>${v.area}</div>
       <p class="vmodal-desc">${v.desc}</p>
@@ -1349,6 +1356,85 @@ function openVenue(name){
       <div class="vmodal-links">${links.join('')}</div>
     </div><div style="height:20px"></div>`;
   document.getElementById('venue-modal').classList.add('open');
+  // Async photo load — swap gradient hero with real photo if found
+  fetchVenuePhoto(v.name).then(photoUrl=>{
+    if(photoUrl && activeModalVenue===name){
+      const hero=document.getElementById('vmodal-hero');
+      if(hero) hero.innerHTML=`<img src="${photoUrl}" alt="${v.name}" style="width:100%;height:100%;object-fit:cover;opacity:.88" onerror="this.closest('.vmodal-photo').style.background='${grad}';this.remove()"><div class="vmodal-ov"></div><div class="vmodal-title"><div class="vmodal-badge">${badge}</div><div class="vmodal-name">${v.name}</div></div>`;
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// GOOGLE PLACES PHOTOS
+// ══════════════════════════════════════════════════════
+const GOOGLE_PLACES_KEY='AIzaSyAdsNk4d69tN7S1omG4nqYcVmwBUEmCc6U';
+const PHOTO_CACHE_TTL=24*60*60*1000; // 24 hours
+
+async function fetchVenuePhoto(venueName){
+  if(!GOOGLE_PLACES_KEY) return null;
+  const cacheKey='fp-photo-'+venueName;
+  try{
+    const cached=localStorage.getItem(cacheKey);
+    if(cached){
+      const {url,ts}=JSON.parse(cached);
+      if(Date.now()-ts<PHOTO_CACHE_TTL) return url;
+    }
+    const q=encodeURIComponent(venueName+' Koh Phangan');
+    const res=await fetch(`https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${q}&inputtype=textquery&fields=photos&key=${GOOGLE_PLACES_KEY}`);
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const data=await res.json();
+    const ref=data?.candidates?.[0]?.photos?.[0]?.photo_reference||null;
+    const url=ref?`https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference=${ref}&key=${GOOGLE_PLACES_KEY}`:null;
+    localStorage.setItem(cacheKey,JSON.stringify({url,ts:Date.now()}));
+    return url;
+  }catch(e){
+    console.warn('fetchVenuePhoto failed for',venueName,e.message);
+    return null;
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// NEAR ME FEATURE
+// ══════════════════════════════════════════════════════
+function distanceKm(lat1,lng1,lat2,lng2){
+  const R=6371,dLat=(lat2-lat1)*Math.PI/180,dLng=(lng2-lng1)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+function renderNearbyVenues(userLat,userLng){
+  const allV=[...VENUES.party,...VENUES.wellness,...VENUES.sport,...VENUES.restaurant];
+  const withDist=allV.filter(v=>v.lat&&v.lng)
+    .map(v=>({...v,dist:distanceKm(userLat,userLng,v.lat,v.lng)}))
+    .sort((a,b)=>a.dist-b.dist);
+  document.getElementById('nearby-hdr').style.display='';
+  document.getElementById('map-v').innerHTML=withDist.map(v=>buildVCard(v,v.dist)).join('')+'<div style="height:80px"></div>';
+}
+
+function initNearMe(){
+  if(!navigator.geolocation){
+    document.getElementById('near-me-status').textContent=i('location-denied');
+    document.getElementById('near-me-status').style.display='';
+    return;
+  }
+  const btn=document.getElementById('near-me-btn');
+  const status=document.getElementById('near-me-status');
+  btn.style.display='none';
+  status.textContent=i('locating');
+  status.style.display='';
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      status.style.display='none';
+      document.getElementById('mapp-hero').style.display='none';
+      renderNearbyVenues(pos.coords.latitude,pos.coords.longitude);
+    },
+    ()=>{
+      status.textContent=i('location-denied');
+      btn.style.display='';
+    },
+    {timeout:10000,maximumAge:60000}
+  );
 }
 
 // ══════════════════════════════════════════════════════
