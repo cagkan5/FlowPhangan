@@ -620,71 +620,8 @@ let curDay='today', curCat='all', activeEv=null, fetching=false;
 
 function fmtDate(d){return d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}
 
-// Translation: Anthropic API requires a server-side key — browser calls return 401.
-// Descriptions come from todo.today in English. We show a small badge if UI lang != EN.
-async function translateDesc(text, targetLang){
-  // No-op: server-side translation not available from browser without a proxy.
-  // Return original text — descriptions are in English from todo.today.
-  return text;
-}
-
-// Fetch events from phangan.events Tribe REST API
-async function fetchFromAPI(day){
-  const dt = day==='today' ? TODAY_DT : TMRW_DT;
-  const ds = dt.toISOString().split('T')[0];
-  const apiUrl = `https://phangan.events/wp-json/tribe/events/v1/events?start_date=${ds}&end_date=${ds}&per_page=30&status=publish`;
-  
-  // Try direct first, then CORS proxies
-  const attempts = [
-    apiUrl,
-    `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`,
-    `https://api.allorigins.win/raw?url=${encodeURIComponent(apiUrl)}`,
-  ];
-
-  for (const url of attempts) {
-    try {
-      const r = await fetch(url, {headers:{'Accept':'application/json'}});
-      if(!r.ok) continue;
-      const d = await r.json();
-      if(!d.events?.length) continue;
-      console.log('API success via:', url.slice(0,40));
-      return d.events.map((e,i)=>tribeToEv(e,i));
-    } catch(e) {
-      console.log('Attempt failed:', url.slice(0,40), e.message);
-    }
-  }
-  throw new Error('All API attempts failed');
-}
-
-function tribeToEv(e,i){
-  const sdt=new Date(e.start_date), edt=new Date(e.end_date);
-  const st=pad(sdt.getHours())+':'+pad(sdt.getMinutes());
-  const et=pad(edt.getHours())+':'+pad(edt.getMinutes());
-  const vname=e.venue?.venue||'Koh Phangan';
-  const vtitle=(e.title||'').replace(/<[^>]+>/g,'');
-  const vdesc=(e.description||'').replace(/<[^>]+>/g,'').trim().slice(0,400);
-  const cost=e.cost?.trim()||''
-  const price=(!cost||cost==='0'||/free/i.test(cost))?null:(/donation/i.test(cost)?null:cost);
-  const donation=/donation/i.test(cost);
-  const area=parseArea(e);
-  const cat=guessCat(vtitle,vdesc,vname);
-  const img=e.image?.url||e.image?.sizes?.medium?.url||null;
-  const lineup=parseLineup((e.description||''). replace(/<[^>]+>/g,' '));
-  return {id:e.id||i+100,title:vtitle,venue:vname,area,cat,startTime:st,endTime:et,
-    endsNextDay:edt.getDate()!==sdt.getDate(),price,donation,desc:vdesc,
-    lineup,ticketUrl:e.url||null,imageUrl:img,mapsQ:encodeQ(vname)};
-}
-
 function pad(n){return String(n).padStart(2,'0');}
 function encodeQ(s){return encodeURIComponent(s+' Koh Phangan').replace(/%20/g,'+');}
-function parseArea(e){
-  if(!e.venue) return 'Koh Phangan';
-  const raw=(e.venue.address||''+' '+(e.venue.city||'')).toLowerCase();
-  const MAP={'sri thanu':'Sri Thanu','srithanu':'Sri Thanu','ban tai':'Ban Tai','baan tai':'Ban Tai','haad rin':'Haad Rin','haad yao':'Haad Yao','haad yuan':'Haad Yuan','haad chao phao':'Haad Chao Phao','chao phao':'Haad Chao Phao','thong sala':'Thong Sala','mae haad':'Mae Haad','leela':'Leela Beach','ao nai wok':'Ao Nai Wok'};
-  for(const[k,v] of Object.entries(MAP)){if(raw.includes(k))return v;}
-  const city=(e.venue.city||'').replace(/ko pha.ngan|koh phangan|surat thani|thailand/gi,'').trim();
-  return city||'Koh Phangan';
-}
 // todo.today category_id → categories
 // todo.today category_id → our categories
 // Multi-cat supported: e.g. Sound Healing DJ set → ['music','practices']
@@ -734,10 +671,7 @@ function guessCats(title, desc, venue, categoryId) {
   return cats.length ? cats : ['practices'];
 }
 
-// Backward compat
-function guessCat(t, d, v) {
-  return guessCats(t, d||'', v||'', null)[0] || 'practices';
-}
+
 function parseLineup(desc){
   const m=desc.match(/line[- ]?up[:\s]+([^\n]+)/i);
   if(!m)return[];
@@ -830,26 +764,6 @@ function parseAreaFromText(text){
   return 'Koh Phangan';
 }
 
-async function fetchFromClaude(day){
-  const dt=day==='today'?TODAY_DT:TMRW_DT;
-  const iso=dt.toISOString().split('T')[0];
-  const prompt=`Search phangan.events for ALL Koh Phangan events on ${fmtDate(dt)} (${iso}).
-Return ONLY a JSON array. Each object: {id,title,venue,area,cat,startTime,endTime,endsNextDay,price,donation,desc,lineup,ticketUrl,imageUrl,mapsQ}
-- area: exact neighborhood (Sri Thanu / Ban Tai / Haad Rin / Haad Yuan / Leela Beach / Haad Chao Phao / Mae Haad / Thong Sala)
-- cat: party|wellness|yoga|ecstatic|festival
-- imageUrl: null
-- desc: full description from phangan.events (2-3 sentences)
-- lineup: array of strings
-Find ALL events including wellness, yoga, ecstatic dance, live music, ceremonies.`;
-  const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:4000,tools:[{type:"web_search_20250305",name:"web_search"}],messages:[{role:"user",content:prompt}]})});
-  if(!r.ok) throw new Error('Claude '+r.status);
-  const d=await r.json();
-  const txt=d.content.filter(b=>b.type==='text').map(b=>b.text).join('');
-  const m=txt.match(/\[[\s\S]*\]/);
-  if(!m) throw new Error('No JSON');
-  return JSON.parse(m[0]);
-}
 
 // ══════════════════════════════════════════════════════
 // FAVORITES
@@ -987,7 +901,7 @@ async function fetchWeather(){
 }
 
 // ══════════════════════════════════════════════════════
-// EVENT DATA FETCHING — Railway → phangan.events → Claude → offline
+// EVENT DATA FETCHING — todo.today → offline fallback
 // ══════════════════════════════════════════════════════
 function showSkeletons(){
   const skels=Array(4).fill(0).map(()=>`
@@ -999,35 +913,6 @@ function showSkeletons(){
   document.getElementById('ev-list').innerHTML=skels;
 }
 
-async function fetchFromRailway(day){
-  const ctrl=new AbortController();
-  const timer=setTimeout(()=>ctrl.abort(),8000);
-  try{
-    const r=await fetch(SCRAPER_URL+'/events?day='+day,{signal:ctrl.signal});
-    clearTimeout(timer);
-    if(!r.ok) throw new Error('Railway HTTP '+r.status);
-    const d=await r.json();
-    if(!d.events?.length) throw new Error('Railway: no events');
-    return d.events.map(e=>({
-      id:        e.id||Math.random().toString(36).slice(2),
-      title:     e.title||'Untitled',
-      venue:     e.venue||'Koh Phangan',
-      area:      e.area||'Koh Phangan',
-      cat:       guessCat(e.title||'',e.description||'',e.venue||''),
-      startTime: e.time_start||'00:00',
-      endTime:   e.time_end||'00:00',
-      endsNextDay: false,
-      price:     e.price||null,
-      donation:  /donation/i.test(e.price||''),
-      desc:      (e.description||'').slice(0,300),
-      lineup:    [],
-      ticketUrl: e.url||null,
-      imageUrl:  null,
-      mapsQ:     encodeQ(e.venue||''),
-      source:    e.source||'railway'
-    }));
-  }catch(err){clearTimeout(timer);throw err;}
-}
 
 async function fetchEvents(){
   if(fetching)return;
@@ -1050,17 +935,9 @@ async function fetchEvents(){
     source='todo.today';
   }catch(e1){
     console.log('[todo.today] failed:',e1.message);
-    // 2️⃣ Claude AI web search
-    try{
-      setAIBar('loading','🔍 '+i('loading-events'));
-      evs=await fetchFromClaude(curDay);
-      source='Claude AI';
-    }catch(e2){
-      console.log('[Claude] failed:',e2.message);
-      // 3️⃣ Offline fallback
-      evs=curDay==='today'?FALLBACK_TODAY:FALLBACK_TMRW;
-      source='offline';
-    }
+    // 2️⃣ Offline fallback
+    evs=curDay==='today'?FALLBACK_TODAY:FALLBACK_TMRW;
+    source='offline';
   }
   if(evs&&evs.length&&source!=='offline'){
     cache[curDay]={data:evs,ts:Date.now()};
@@ -1130,7 +1007,7 @@ function buildCard(ev, isTmrw){
   const ps = pStr(ev);
   const area = (ev.area||'Koh Phangan').split('(')[0].split(',')[0].trim();
   const faved = isFav(ev.id);
-  const imgUrl = ev.imageUrl || getPhotoUrl(ev.venue);
+  const imgUrl = ev.imageUrl || null;
   const sid = String(ev.id).replace(/['"]/g,'');
   const catEmoji = ev.cat==='party'?'🎉':ev.cat==='wellness'?'🌿':ev.cat==='yoga'?'🧘':ev.cat==='ecstatic'?'💃':ev.cat==='festival'?'🎪':'⭐';
   const lineupHtml = ev.lineup&&ev.lineup.length
@@ -1321,31 +1198,6 @@ function cpLink(){navigator.clipboard?.writeText('https://flowphangan.pages.dev'
 function doDir(){if(activeEv)openMaps(activeEv.mapsQ||activeEv.venue+'+Koh+Phangan');}
 function openMaps(q){window.open('https://maps.google.com/maps?q='+q);}
 
-// ══════════════════════════════════════════════════════
-// VENUE ILLUSTRATIONS — AI-style cartoon SVG art
-// Each venue gets a unique hand-crafted cartoon scene
-// ══════════════════════════════════════════════════════
-// ══════════════════════════════════════════════════════
-// VENUE PHOTOS — Railway scraper'dan çekilir
-// ══════════════════════════════════════════════════════
-const SCRAPER_URL = 'https://phangan-scraper-production.up.railway.app';
-const photoCache = {};
-
-async function loadAllVenuePhotos() {
-  try {
-    const r = await fetch(SCRAPER_URL + '/venues');
-    if (!r.ok) return;
-    const data = await r.json();
-    Object.assign(photoCache, data);
-    console.log('Venue photos loaded:', Object.keys(photoCache).length);
-  } catch(e) {
-    console.log('Could not load venue photos:', e.message);
-  }
-}
-
-function getPhotoUrl(venueName) {
-  return photoCache[venueName] || null;
-}
 
 // Kategori bazlı fallback gradients
 const CAT_GRAD = {
@@ -1484,7 +1336,7 @@ function openVenue(name){
   if(v.web)links.push(`<a href="${v.web}" target="_blank" rel="noopener" class="vlink"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 014-10z"/></svg>Website</a>`);
   if(v.ig)links.push(`<a href="https://instagram.com/${v.ig.replace('@','')}" target="_blank" rel="noopener" class="vlink" style="color:#E1306C;border-color:rgba(225,48,108,.2)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>${v.ig}</a>`);
   if(v.maps)links.push(`<button class="vlink" onclick="openMaps('${v.maps}')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>${i('directions')}</button>`);
-  const photoUrl=getPhotoUrl(v.name);
+  const photoUrl=v.imageUrl||null;
   const heroHtml=photoUrl
     ?`<div class="vmodal-photo" style="background:#000"><img src="${photoUrl}" alt="${v.name}" style="width:100%;height:100%;object-fit:cover;opacity:.85" onerror="this.style.display='none'"><div class="vmodal-ov"></div><div class="vmodal-title"><div class="vmodal-badge">${v.type} · ${v.area.split('(')[0].split(',')[0].trim()}</div><div class="vmodal-name">${v.name}</div></div></div>`
     :`<div class="vmodal-photo" style="background:${grad}"><div class="vmodal-ov"></div><div class="vmodal-title"><div class="vmodal-badge">${v.type} · ${v.area.split('(')[0].split(',')[0].trim()}</div><div class="vmodal-name">${v.name}</div></div></div>`;
