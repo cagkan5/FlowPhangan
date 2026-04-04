@@ -1334,7 +1334,6 @@ function toggleSec(id){
 }
 function searchV(q){renderVenues(q);}
 
-let activeModalVenue=null;
 function openVenue(name){
   const allV=[...VENUES.party,...VENUES.wellness,...VENUES.sport,...VENUES.restaurant];
   const v=allV.find(x=>x.name===name);
@@ -1346,9 +1345,11 @@ function openVenue(name){
   if(v.ig)links.push(`<a href="https://instagram.com/${v.ig.replace('@','')}" target="_blank" rel="noopener" class="vlink" style="color:#E1306C;border-color:rgba(225,48,108,.2)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>${v.ig}</a>`);
   if(v.maps)links.push(`<button class="vlink" onclick="openMaps('${v.maps}')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>${i('directions')}</button>`);
   const badge=`${v.type} · ${v.area.split('(')[0].split(',')[0].trim()}`;
-  const gradHero=`<div class="vmodal-photo" id="vmodal-hero" style="background:${grad}"><div class="vmodal-ov"></div><div class="vmodal-title"><div class="vmodal-badge">${badge}</div><div class="vmodal-name">${v.name}</div></div></div>`;
+  const heroHtml=`<div class="vmodal-photo" style="background:${grad}">
+    <img src="${venuePhotoUrl(v.name)}" alt="${v.name}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s" onload="this.style.opacity='.88'" onerror="this.remove()">
+    <div class="vmodal-ov"></div><div class="vmodal-title"><div class="vmodal-badge">${badge}</div><div class="vmodal-name">${v.name}</div></div></div>`;
   document.getElementById('vm-content').innerHTML=`
-    ${gradHero}
+    ${heroHtml}
     <div class="vmodal-body">
       <div class="vmodal-area"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>${v.area}</div>
       <p class="vmodal-desc">${v.desc}</p>
@@ -1356,42 +1357,13 @@ function openVenue(name){
       <div class="vmodal-links">${links.join('')}</div>
     </div><div style="height:20px"></div>`;
   document.getElementById('venue-modal').classList.add('open');
-  // Async photo load — swap gradient hero with real photo if found
-  fetchVenuePhoto(v.name).then(photoUrl=>{
-    if(photoUrl && activeModalVenue===name){
-      const hero=document.getElementById('vmodal-hero');
-      if(hero) hero.innerHTML=`<img src="${photoUrl}" alt="${v.name}" style="width:100%;height:100%;object-fit:cover;opacity:.88" onerror="this.closest('.vmodal-photo').style.background='${grad}';this.remove()"><div class="vmodal-ov"></div><div class="vmodal-title"><div class="vmodal-badge">${badge}</div><div class="vmodal-name">${v.name}</div></div>`;
-    }
-  });
 }
 
 // ══════════════════════════════════════════════════════
-// GOOGLE PLACES PHOTOS
+// GOOGLE PLACES PHOTOS (proxied via Cloudflare Pages Function)
 // ══════════════════════════════════════════════════════
-const GOOGLE_PLACES_KEY='AIzaSyAdsNk4d69tN7S1omG4nqYcVmwBUEmCc6U';
-const PHOTO_CACHE_TTL=24*60*60*1000; // 24 hours
-
-async function fetchVenuePhoto(venueName){
-  if(!GOOGLE_PLACES_KEY) return null;
-  const cacheKey='fp-photo-'+venueName;
-  try{
-    const cached=localStorage.getItem(cacheKey);
-    if(cached){
-      const {url,ts}=JSON.parse(cached);
-      if(Date.now()-ts<PHOTO_CACHE_TTL) return url;
-    }
-    const q=encodeURIComponent(venueName+' Koh Phangan');
-    const res=await fetch(`https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${q}&inputtype=textquery&fields=photos&key=${GOOGLE_PLACES_KEY}`);
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const data=await res.json();
-    const ref=data?.candidates?.[0]?.photos?.[0]?.photo_reference||null;
-    const url=ref?`https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference=${ref}&key=${GOOGLE_PLACES_KEY}`:null;
-    localStorage.setItem(cacheKey,JSON.stringify({url,ts:Date.now()}));
-    return url;
-  }catch(e){
-    console.warn('fetchVenuePhoto failed for',venueName,e.message);
-    return null;
-  }
+function venuePhotoUrl(venueName){
+  return '/api/venue-photo?name='+encodeURIComponent(venueName);
 }
 
 // ══════════════════════════════════════════════════════
