@@ -1,7 +1,16 @@
 {
-    "name": "flowphangan",
-    "main": "worker.js",
-    "compatibility_date": "2026-04-04",
-    "assets": { "directory": ".", "binding": "ASSETS" },
-    "compatibility_flags": ["nodejs_compat"]
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "flowphangan",
+  "main": "worker.js",
+  "compatibility_date": "2026-04-04",
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS"
+  },
+  "compatibility_flags": [
+    "nodejs_compat"
+  ]
 }
